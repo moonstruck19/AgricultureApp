@@ -3,15 +3,16 @@ const app = express();
 const mongoose = require("mongoose");
 const cors = require('cors');
 const bodyParser = require('body-parser'); 
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
 require('../app/model/user'); 
+require('../app/model/task'); 
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
 
 // MongoDB connection
-const mongoUrl = "mongodb+srv://lamborghininguyn:G0V7J1wZXC5wDfXi@cluster0.7uvb1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const mongoUrl = 'mongodb+srv://lamborghininguyn:G0V7J1wZXC5wDfXi@cluster0.7uvb1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
 mongoose.connect(mongoUrl).then(() => {
     console.log("Database is connected!");
@@ -21,6 +22,7 @@ mongoose.connect(mongoUrl).then(() => {
 
 // Define the User model
 const User = mongoose.model("userInfo");
+const Task = mongoose.model("taskManagement");
 
 // Root route
 app.get("/", (req, res) => {
@@ -90,6 +92,27 @@ app.post('/login', async (req, res) => {
             status: "error",
             message: error.message,
         });
+    }
+});
+
+app.post('/addTask', async(req, res) => {
+    const { task_name, task_description, task_member } = req.body
+
+    try { 
+        await Task.create({
+            task_name: task_name,
+            task_description: task_description,
+            task_member: task_member,
+        });
+        res.status(201).send({
+            status: "ok",
+            message: "Task created successfully"
+        })
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            message: error.message,
+        })
     }
 });
 

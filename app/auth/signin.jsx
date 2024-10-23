@@ -19,10 +19,10 @@ const Signin = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Welcome Back</Text>
       <Formik
-        initialValues={{ email: "hung@gmail.com", password: "1234" }}
+        initialValues={{ email: "test3@gmail.com", password: "111111" }}
         onSubmit={async (values) => {
           try {
-            const response = await fetch('http://192.168.1.9:5001/login', {
+            const response = await fetch(`http://192.168.1.11:5001/login`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -35,7 +35,6 @@ const Signin = () => {
 
             const data = await response.json();
             if (data.status === "ok") {
-              // If login is successful, redirect to the home page
               router.push("/(tabs)");
             } else {
               setErrorMessage(data.message || "Login failed. Please try again.");

@@ -43,7 +43,7 @@ export default function RootLayout() {
             drawerIcon: config =>
               <Icon name="gear" size={30} color="#000" />
           }}
-        />
+        />        
       </Drawer.Navigator>
     </NavigationContainer>
   );
