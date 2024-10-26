@@ -1,105 +1,216 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+// import * as Contacts from 'expo-contacts';
+// import * as Permissions from 'expo-permissions';
+import { PermissionsAndroid } from 'react-native';
+import Contacts from 'react-native-contacts';
+
+const validationTask = Yup.object().shape({
+  task_name: Yup.string().required('Task Name is required'),
+  task_description: Yup.string().required('Task Description is required'),
+  // task_member: Yup.string().required('Task Member is required'),
+});
+
+const handleAddMember = async (setFieldValue) => {
+  const { status } = await Contacts.requestPermissionsAsync();
+  if (status === 'granted') {
+    const { data } = await Contacts.getContactsAsync({
+      fields: [Contacts.Fields.Name],
+    });
+
+    if (data.length > 0) {
+      const selectedContact = data[0].name;
+
+      setTaskMember(selectedContact);
+      setFieldValue('task_member', selectedContact);
+    } else {
+      alert('No contacts found');
+    }
+  } else {
+    alert('Permission to access contacts was denied');
+  }
+};
 
 const AddTask = () => {
-  const [taskDescription, settaskDescription] = useState("Mobile App Interface Optimization");
-  const [taskName, settaskName] = useState("App Enhancements");
-  const [taskMember, settaskMember] = useState("Guzman Nura");
-  const [deadline, setDeadline] = useState("October 15, 2023");
+  const [taskDescription, setTaskDescription] = useState("")
+  const [taskMember, setTaskMember] = useState("")
+  // const [contacts, setContacts] = useState([])
+  // const [isLoading, setIsLoading] = useState(true)
+  
+  // useEffect(() => {
+  //   readContact()
+  // }, [])
 
-  // onDateChange(date) {
-  //   this.setState({
-  //     selectedStartDate: date,
-  //   });
+  // const readContact = async () => {
+  //   const config = { sort: Contacts.SortType.FirstName}
+
+  //   const loadedContacts = (await Contacts.getContactsAsync(config))||
+  //   {
+  //     data: []
+  //   }
+  //   setContacts(loadedContacts.data)
+  // }
+  // const readContact = async () => {
+  //   try {
+  //     const res = await PermissionsAndroid.request(
+  //       PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+  //       {
+  //         title: 'Contacts',
+  //         message: 'This app would like to view your contacts.',
+  //         buttonPositive: 'CANCEL',
+  //         buttonNegative: 'OK'
+  //       }
+  //     );
+  
+  //     if (res === PermissionsAndroid.RESULTS.GRANTED) {
+  //       Contacts.getAll()
+  //         .then(contacts => {
+  //           console.log(contacts);
+  //           setContacts(contacts);
+  //           setIsLoading(false);
+  //         })
+  //         .catch(err => console.error('Error fetching contacts: ', err));
+  //     } else {
+  //       console.log('Permission denied');
+  //     }
+  //   } catch (error) {
+  //     console.error('Permission error: ', error);
+  //   }
   // };
+  
+
+  const handleAddTask = async (values) => {
+    try {
+      const response = await fetch(`http://192.168.1.11:5001/addTask`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          task_name: values.task_name,
+          task_description: values.task_description,
+          task_member: values.task_member,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert("Task added successfully!");
+      } else {
+        alert(result.message || "Error adding task.");
+      }
+    } catch (error) {
+      alert("Error: " + error.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <View style={styles.section}>
-        <Text style={styles.label}>Task Name</Text>
-        <View style={styles.inline}>
-          <TextInput value={taskName} style={styles.input} />
-        </View>
-      </View>
-      <View style={styles.section}>
-        <Text style={styles.label}>Task Description</Text>
-        <TextInput
-          value={taskDescription}
-          onChangeText={settaskDescription}
-          style={styles.textArea}
-          multiline={true}
-          maxLength={45}
-        />
-        <Text style={styles.textCount}>{taskDescription.length}/45</Text>
-      </View>
+      <Formik
+        initialValues={{ task_name: "", task_description: "", task_member: "" }}
+        onSubmit={(values) => handleAddTask(values)}
+        validationSchema={validationTask}
+      >
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+        }) => (
+          <>
+            <View style={styles.section}>
+              <Text style={styles.label}>Title</Text>
+              <View style={styles.inline}>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={handleChange('task_name')}
+                  onBlur={handleBlur('task_name')}
+                  value={values.task_name}
+                />
+              </View>
+              {touched.task_name && errors.task_name && (
+                <Text style={styles.errorText}>{errors.task_name}</Text>
+              )}
+            </View>
 
-      {/* Assigned to */}
-      <View style={styles.section}>
-        <Text style={styles.label}>Member</Text>
-        <View style={styles.inline}>
-          <View style={styles.assigned}>
-            <Ionicons name="person-circle" size={24} color="black" />
-            <Text style={styles.assignedText}>{taskMember}</Text>
-          </View>
-          <TouchableOpacity>
-            <Ionicons name="add" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
-      </View>
+            <View style={styles.section}>
+              <Text style={styles.label}>Description</Text>
+              <TextInput
+                onChangeText={(text) => {
+                  setTaskDescription(text);
+                  handleChange('task_description')(text);
+                }}
+                onBlur={handleBlur('task_description')}
+                style={styles.textArea}
+                multiline={true}
+                maxLength={45}
+                value={values.task_description}
+              />
+              <Text style={styles.textCount}>{taskDescription.length}/45</Text>
+              {touched.task_description && errors.task_description && (
+                <Text style={styles.errorText}>{errors.task_description}</Text>
+              )}
+            </View>
 
-      {/* Deadline */}
-      <View style={styles.section}>
-        <Text style={styles.label}>Deadline</Text>
-        {/* <CalendarPicker onDateChange={this.onDateChange} /> */}
-      </View>
+            <View style={styles.section}>
+              <Text style={styles.label}>Member</Text>
+              <View style={styles.inline}>
+                <View style={styles.assigned}>
+                  <Ionicons name="person-circle" size={24} color="black" />
+                  <Text style={styles.assignedText}>{taskMember}</Text>
+                </View>
+                <TouchableOpacity onPress={() => setTaskMember('New Member')}>
+                  <Ionicons name="add" size={24} color="black" />
+                </TouchableOpacity>
+              </View>
+              {touched.task_member && errors.task_member && (
+                <Text style={styles.errorText}>{errors.task_member}</Text>
+              )}
+            </View>
 
-      {/* Create button */}
-      {/* <TouchableOpacity style={styles.buttonContainer}>
-        <LinearGradient
-          colors={["#7f00ff", "#e100ff"]}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>Create new tasks</Text>
-        </LinearGradient>
-      </TouchableOpacity> */}
+            <View style={styles.section}>
+              <Text style={styles.label}>Deadline</Text>
+            </View>
+
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity onPress={() => handleAddMember(setFieldValue)}>
+                <Ionicons name="add" size={24} color="black" />
+              </TouchableOpacity>
+              <Text style={styles.assignedText}>{taskMember}</Text>
+            </View>
+          </>
+        )}
+      </Formik>
     </View>
   );
 };
 
+export default AddTask;
+
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 80,
+    paddingTop: 10,
     flex: 1,
     paddingHorizontal: 20,
     backgroundColor: "#F8F8F8",
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginVertical: 20,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  draftText: {
-    color: "#7f00ff",
-    fontSize: 16,
   },
   section: {
     marginBottom: 20,
   },
   label: {
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: "500",
     marginBottom: 8,
   },
   textArea: {
     backgroundColor: "#fff",
-    borderRadius: 10,
+    borderRadius: 15,
     padding: 15,
     height: 80,
     fontSize: 16,
@@ -112,7 +223,7 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: "#fff",
-    borderRadius: 10,
+    borderRadius: 15,
     padding: 15,
     fontSize: 16,
     flex: 1,
@@ -121,11 +232,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-  },
-  addNew: {
-    color: "#7f00ff",
-    fontSize: 16,
-    marginLeft: 10,
   },
   assigned: {
     flexDirection: "row",
@@ -143,6 +249,7 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingVertical: 15,
     borderRadius: 10,
+    backgroundColor: "#7f00ff",
     alignItems: "center",
   },
   buttonText: {
@@ -150,6 +257,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
   },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginTop: 5,
+  },
 });
-
-export default AddTask;

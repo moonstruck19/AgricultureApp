@@ -19,7 +19,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.READ_CONTACTS",
+        "android.permission.WRITE_CONTACTS"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -27,6 +31,12 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Allow $(PRODUCT_NAME) to access your contacts."
+        }
+      ],
       "expo-router"
     ],
     "experiments": {

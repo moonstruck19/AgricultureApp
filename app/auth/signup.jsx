@@ -18,7 +18,7 @@ const validationSchema = Yup.object().shape({
 const Register = () => {
   const handleRegister = async (values) => {
     try {
-      const response = await fetch(`http://192.168.1.11:5001/login`, {
+      const response = await fetch(`192.168.1.11:5001/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ const Register = () => {
           handleSubmit,
           values,
           errors,
-          touched,
+          touchecd,
         }) => (
           <View style={styles.form}>
             <TextInput
