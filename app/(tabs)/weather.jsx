@@ -33,7 +33,7 @@ const Weather = () => {
             if (currentResponse.ok) {
                 setForecast(currentData);
                 setLocationName(`${currentData.name}, ${currentData.sys.country}`);
-                // console.log(currentData)
+                console.log(currentData)
             } else {
                 throw new Error("Could not fetch current weather data");
             }
@@ -105,7 +105,7 @@ const Weather = () => {
 
                     <View style={styles.rainVolume}>
                         <MaterialCommunityIcons name="weather-rainy" size={24} color="black" />
-                        <Text>{rainVolume}%</Text>
+                        <Text>{rainVolume * 100}%</Text>
                         <Text>Rain</Text>
                     </View>
                 </View>
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#1e293b',
+        backgroundColor: '#ffffff',
     },
     scrollView: {
         paddingHorizontal: 20,

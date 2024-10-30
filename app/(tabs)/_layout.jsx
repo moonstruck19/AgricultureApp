@@ -1,9 +1,10 @@
 import 'react-native-gesture-handler'
 import { NavigationContainer } from '@react-navigation/native';
 import TabHome from './index'
-import Profile from './profile';
+import Employee from './employee';
 import Setting from './setting';
 import Weather from './weather';
+import MyFarm from './myFarm'
 import Icon from "react-native-vector-icons/FontAwesome";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -34,10 +35,10 @@ export default function RootLayout() {
             <MaterialCommunityIcons name="home-outline" size={24} color="black" />
           }}
         />
-        <Drawer.Screen name="Profile" component={Profile} 
+        <Drawer.Screen name="Farm" component={MyFarm} 
           options={{
             drawerIcon: config =>
-            <MaterialCommunityIcons name="account-outline" size={24} color="black" />
+            <MaterialCommunityIcons name="tree-outline" size={24} color="black" />
           }}
         />
         <Drawer.Screen name="Weather" component={Weather} 
@@ -46,6 +47,12 @@ export default function RootLayout() {
             <MaterialCommunityIcons name="weather-cloudy" size={24} color="black" />
           }}
         />  
+        <Drawer.Screen name="Employee" component={Employee} 
+          options={{
+            drawerIcon: config =>
+            <MaterialCommunityIcons name="account-outline" size={24} color="black" />
+          }}
+        />
         <Drawer.Screen name="Setting" component={Setting} 
           options={{
             drawerIcon: config =>

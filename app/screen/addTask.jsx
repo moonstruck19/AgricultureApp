@@ -3,8 +3,6 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-nativ
 import { Ionicons } from "@expo/vector-icons";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-// import * as Contacts from 'expo-contacts';
-// import * as Permissions from 'expo-permissions';
 import { PermissionsAndroid } from 'react-native';
 import Contacts from 'react-native-contacts';
 
@@ -37,54 +35,11 @@ const handleAddMember = async (setFieldValue) => {
 const AddTask = () => {
   const [taskDescription, setTaskDescription] = useState("")
   const [taskMember, setTaskMember] = useState("")
-  // const [contacts, setContacts] = useState([])
-  // const [isLoading, setIsLoading] = useState(true)
-  
-  // useEffect(() => {
-  //   readContact()
-  // }, [])
 
-  // const readContact = async () => {
-  //   const config = { sort: Contacts.SortType.FirstName}
-
-  //   const loadedContacts = (await Contacts.getContactsAsync(config))||
-  //   {
-  //     data: []
-  //   }
-  //   setContacts(loadedContacts.data)
-  // }
-  // const readContact = async () => {
-  //   try {
-  //     const res = await PermissionsAndroid.request(
-  //       PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-  //       {
-  //         title: 'Contacts',
-  //         message: 'This app would like to view your contacts.',
-  //         buttonPositive: 'CANCEL',
-  //         buttonNegative: 'OK'
-  //       }
-  //     );
-  
-  //     if (res === PermissionsAndroid.RESULTS.GRANTED) {
-  //       Contacts.getAll()
-  //         .then(contacts => {
-  //           console.log(contacts);
-  //           setContacts(contacts);
-  //           setIsLoading(false);
-  //         })
-  //         .catch(err => console.error('Error fetching contacts: ', err));
-  //     } else {
-  //       console.log('Permission denied');
-  //     }
-  //   } catch (error) {
-  //     console.error('Permission error: ', error);
-  //   }
-  // };
-  
 
   const handleAddTask = async (values) => {
     try {
-      const response = await fetch(`http://192.168.1.11:5001/addTask`, {
+      const response = await fetch(`http://192.168.1.5:5001/addTask`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -184,6 +139,9 @@ const AddTask = () => {
               </TouchableOpacity>
               <Text style={styles.assignedText}>{taskMember}</Text>
             </View>
+            <TouchableOpacity onPress={handleSubmit} style={styles.button}>
+                <Text style={styles.buttonText}>CONFIRM</Text>
+            </TouchableOpacity>
           </>
         )}
       </Formik>

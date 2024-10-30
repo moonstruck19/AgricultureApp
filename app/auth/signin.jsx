@@ -5,6 +5,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
+import Config from "react-native-config";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required('Email is required').email().label("Email"),
@@ -22,7 +23,7 @@ const Signin = () => {
         initialValues={{ email: "test3@gmail.com", password: "111111" }}
         onSubmit={async (values) => {
           try {
-            const response = await fetch(`http://192.168.1.11:5001/login`, {
+            const response = await fetch(`http://192.168.1.5:5001/login`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -41,6 +42,7 @@ const Signin = () => {
             }
           } catch (error) {
             setErrorMessage("An error occurred. Please try again later.");
+            console.log(error)
           }
         }}
         validationSchema={validationSchema}

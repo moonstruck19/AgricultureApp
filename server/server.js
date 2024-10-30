@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 require('../app/model/user'); 
 require('../app/model/task'); 
+require('../app/model/employee'); 
+require('../app/model/crop')
 
 // Middleware
 app.use(cors());
@@ -22,7 +24,9 @@ mongoose.connect(mongoUrl).then(() => {
 
 // Define the User model
 const User = mongoose.model("userInfo");
-const Task = mongoose.model("taskManagement");
+const Task = mongoose.model("taskManagerment");
+const Emp = mongoose.model("empManagerment")
+const Crop = mongoose.model("cropManagerment")
 
 // Root route
 app.get("/", (req, res) => {
@@ -115,6 +119,41 @@ app.post('/addTask', async(req, res) => {
         })
     }
 });
+
+app.post('/addCrop', async(req, res) => {
+    const { crop_name, crop_date, crop_details } = req.body
+
+    try { 
+        await Crop.create({
+            crop_name: crop_name,
+            crop_date: crop_date,
+            crop_details: crop_details,
+        });
+        res.status(201).send({
+            status: "ok",
+            message: "Crop created successfully"
+        })
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            message: error.message,
+        })
+    }
+});
+
+
+app.get('/fetchCrop', async(req, res) => {
+    try {
+        const data = await Crop.find({})
+        res.send({
+            status: "ok",
+            data: data
+        })
+
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 // Start server
 app.listen(5001, () => {

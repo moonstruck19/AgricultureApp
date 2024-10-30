@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const Profile = () => {
+const AddAnimal = () => {
   return (
     <View>
-      <Text>Profile</Text>
+      <Text>AddAnimal</Text>
     </View>
   )
 }
 
-export default Profile
+export default AddAnimal
 
 const styles = StyleSheet.create({})

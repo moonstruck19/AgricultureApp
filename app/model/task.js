@@ -5,6 +5,6 @@ const taskSchema = new mongoose.Schema({
     task_description: {type: String, maxLength: 100},
     task_member: {type: String, maxLength: 100},
 }, {
-    collection: "taskManagement"
+    collection: "taskManagerment"
 });
-mongoose.model("taskManagement", taskSchema)
+mongoose.model("taskManagerment", taskSchema)
