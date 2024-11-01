@@ -1,43 +1,71 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image, RefreshControl } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, RefreshControl } from 'react-native';
 import { Link } from "expo-router";
 
 const MyFarm = () => {
     const [activeTab, setActiveTab] = useState('Crops');
-    const [data, setData] = useState([]);
+    const [dataCrop, setDataCrop] = useState([]);
+    const [dataAnimal, setDataAnimal] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
 
-    const fetchData = () => {
-        fetch("http://192.168.1.5:5001/fetchCrop", {
+    const urlServer = process.env.SERVER_IP;
+
+    const fetchCrop = () => {
+        fetch(`http://192.168.1.5:5001/fetchCrop`, {
             method: "GET",
         })
             .then((res) => res.json())
-            .then((data) => {
-                // console.log(data, "Crop");
-                setData(data.data);
+            .then((dataCrop) => {
+                setDataCrop(dataCrop.data);
             })
             .catch((error) => {
-                console.error("Error fetching crops data:", error);
+                console.error("Error fetching crops data: ", error);
+            })
+            .finally(() => setRefreshing(false));
+    };
+
+    const fetchAnimal = () => {
+        fetch(`http://192.168.1.5:5001/fetchAnimal`, {
+            method: "GET",
+        })
+            .then((res) => res.json())
+            .then((dataAnimal) => {
+                setDataAnimal(dataAnimal.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching animals data: ", error);
             })
             .finally(() => setRefreshing(false));
     };
 
     useEffect(() => {
-        fetchData();
+        fetchCrop();
+        fetchAnimal();
     }, []);
 
     const onRefresh = () => {
         setRefreshing(true);
-        fetchData();
+        fetchCrop();
+        fetchAnimal();
     };
 
     const renderCard = ({ item }) => (
         <View style={styles.card}>
-            {/* <Image source={{ uri: `${item.image || '/Tai Lieu Hoc Phan/DACN2/Agriculture/assets/images/default.png'}` }} style={styles.cardImage} /> */}
             <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>{item.crop_name}</Text>
-                <Text style={styles.cardDescription}>{item.crop_details}</Text>
-                <Text style={styles.cardDate}>{item.crop_date}</Text>
+                {activeTab === 'Crops' ? (
+                    <>
+                        <Text style={styles.cardTitle}>{item.crop_name}</Text>
+                        <Text style={styles.cardDescription}>{item.crop_details}</Text>
+                        <Text style={styles.cardDate}>{item.crop_date}</Text>
+                    </>
+                ) : (
+                    <>
+                        <Text style={styles.cardTitle}>{item.animal_name}</Text>
+                        <Text style={styles.cardDescription}>{item.animal_details}</Text>
+                        <Text style={styles.cardQuantity}>Quantity: {item.animal_quantity}</Text>
+                        <Text style={styles.cardDate}>{item.animal_date}</Text>
+                    </>
+                )}
                 <TouchableOpacity>
                     <Text style={styles.detailsButton}>View Details</Text>
                 </TouchableOpacity>
@@ -62,7 +90,7 @@ const MyFarm = () => {
                 <Text style={styles.optionText}>{buttonText}</Text>
             </Link>
             <FlatList
-                data={data}
+                data={activeTab === 'Crops' ? dataCrop : dataAnimal}
                 renderItem={renderCard}
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={styles.cardList}
@@ -132,12 +160,6 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         elevation: 2,
     },
-    cardImage: {
-        width: 70,
-        height: 70,
-        borderRadius: 8,
-        marginRight: 15,
-    },
     cardContent: {
         flex: 1,
     },
@@ -150,6 +172,10 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#8e8e93',
         marginVertical: 5,
+    },
+    cardQuantity: {
+        fontSize: 14,
+        color: '#8e8e93',
     },
     cardDate: {
         fontSize: 12,

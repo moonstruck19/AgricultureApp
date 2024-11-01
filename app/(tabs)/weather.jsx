@@ -105,7 +105,7 @@ const Weather = () => {
 
                     <View style={styles.rainVolume}>
                         <MaterialCommunityIcons name="weather-rainy" size={24} color="black" />
-                        <Text>{rainVolume * 100}%</Text>
+                        <Text>{Math.floor(rainVolume * 100)}%</Text>
                         <Text>Rain</Text>
                     </View>
                 </View>

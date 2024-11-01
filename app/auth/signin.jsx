@@ -15,7 +15,10 @@ const validationSchema = Yup.object().shape({
 const Signin = () => {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState('');
-
+  const urlServer = process.env.SERVER_IP
+  
+  console.log(urlServer)
+  console.log(urlServer)
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome Back</Text>

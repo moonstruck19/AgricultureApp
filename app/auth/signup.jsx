@@ -18,7 +18,7 @@ const validationSchema = Yup.object().shape({
 const Register = () => {
   const handleRegister = async (values) => {
     try {
-      const response = await fetch(`192.168.1.5:5001/login`, {
+      const response = await fetch(`http://192.168.1.5:5001/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -55,7 +55,6 @@ const Register = () => {
           handleSubmit,
           values,
           errors,
-          touchecd,
         }) => (
           <View style={styles.form}>
             <TextInput
@@ -66,7 +65,7 @@ const Register = () => {
               value={values.email}
               keyboardType="email-address"
             />
-            {errors.email && touched.email && (
+            {errors.email && (
               <Text style={styles.errorText}>{errors.email}</Text>
             )}
             <TextInput
@@ -77,7 +76,7 @@ const Register = () => {
               value={values.password}
               secureTextEntry
             />
-            {errors.password && touched.password && (
+            {errors.password && (
               <Text style={styles.errorText}>{errors.password}</Text>
             )}
             <TextInput
@@ -88,7 +87,7 @@ const Register = () => {
               value={values.confirmPassword}
               secureTextEntry
             />
-            {errors.confirmPassword && touched.confirmPassword && (
+            {errors.confirmPassword && (
               <Text style={styles.errorText}>{errors.confirmPassword}</Text>
             )}
             <TouchableOpacity onPress={handleSubmit} style={styles.button}>

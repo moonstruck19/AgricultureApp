@@ -38,7 +38,7 @@ const TabHome = () => {
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.greeting}>Good morning Andre!</Text>
+          <Text style={styles.greeting}>Good morning!</Text>
           <Text style={styles.date}>19 Sept, 2024</Text>
         </View>
         <Link href="/screen/addTask">

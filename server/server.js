@@ -8,6 +8,7 @@ require('../app/model/user');
 require('../app/model/task'); 
 require('../app/model/employee'); 
 require('../app/model/crop')
+require('../app/model/animal')
 
 // Middleware
 app.use(cors());
@@ -27,6 +28,7 @@ const User = mongoose.model("userInfo");
 const Task = mongoose.model("taskManagerment");
 const Emp = mongoose.model("empManagerment")
 const Crop = mongoose.model("cropManagerment")
+const Animal = mongoose.model("animalManagerment")
 
 // Root route
 app.get("/", (req, res) => {
@@ -150,6 +152,18 @@ app.get('/fetchCrop', async(req, res) => {
             data: data
         })
 
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+app.get('/fetchAnimal', async(req, res) => {
+    try {
+        const data = await Animal.find({})
+        res.send({
+            status: "ok",
+            data: data
+        })
     } catch (error) {
         console.log(error)
     }
