@@ -8,10 +8,11 @@ const MyFarm = () => {
     const [dataAnimal, setDataAnimal] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
 
-    const urlServer = process.env.SERVER_IP;
+    const localip = process.env.EXPO_PUBLIC_LOCAL_IP
+
 
     const fetchCrop = () => {
-        fetch(`http://192.168.1.5:5001/fetchCrop`, {
+        fetch(`http://${localip}:5001/fetchCrop`, {
             method: "GET",
         })
             .then((res) => res.json())
@@ -25,7 +26,7 @@ const MyFarm = () => {
     };
 
     const fetchAnimal = () => {
-        fetch(`http://192.168.1.5:5001/fetchAnimal`, {
+        fetch(`http://${localip}:5001/fetchAnimal`, {
             method: "GET",
         })
             .then((res) => res.json())

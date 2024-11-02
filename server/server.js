@@ -143,6 +143,28 @@ app.post('/addCrop', async(req, res) => {
     }
 });
 
+app.post('/addAnimal', async(req, res) => {
+    const {animal_name, animal_date, animal_details, animal_quantity } = req.body
+
+    try {
+        await Animal.create({
+            animal_name: animal_name,
+            animal_date: animal_date, 
+            animal_details: animal_details,
+            animal_quantity: animal_quantity
+        });
+        res.status(201).send({
+            status: "ok",
+            message: "Animal add successfully"
+        })
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            message: error.message
+        })
+    }
+})
+
 
 app.get('/fetchCrop', async(req, res) => {
     try {

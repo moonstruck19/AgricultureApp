@@ -16,9 +16,11 @@ const validationSchema = Yup.object().shape({
 });
 
 const Register = () => {
+  const localip = process.env.EXPO_PUBLIC_LOCAL_IP
+
   const handleRegister = async (values) => {
     try {
-      const response = await fetch(`http://192.168.1.5:5001/register`, {
+      const response = await fetch(`http://${localip}:5001/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

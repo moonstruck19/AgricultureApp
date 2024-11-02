@@ -13,6 +13,7 @@ const AddCrop = () => {
   const [cropDetails, setCropDetails] = useState("");
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
+  const localip = process.env.EXPO_PUBLIC_LOCAL_IP
 
   const handleDateChange = (event, selectedDate, setFieldValue) => {
     if (event.type === 'set') {
@@ -25,7 +26,7 @@ const AddCrop = () => {
 
   const handleAddCrop = async (values) => {
     try {
-      const response = await fetch(`http://192.168.1.5:5001/addCrop`, {
+      const response = await fetch(`http://${localip}:5001/addCrop`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -90,6 +91,7 @@ const AddCrop = () => {
                 </TouchableOpacity>
                 {showPicker && (
                   <DateTimePicker
+                    key={date.toISOString()} 
                     mode="date"
                     value={values.crop_date || date}
                     onChange={(event, selectedDate) => handleDateChange(event, selectedDate, setFieldValue)}
