@@ -7,6 +7,7 @@ import { TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import Config from "react-native-config";
 
+
 const validationSchema = Yup.object().shape({
   email: Yup.string().required('Email is required').email().label("Email"),
   password: Yup.string().required('Password is required').min(4).label("Password"),
@@ -16,9 +17,8 @@ const Signin = () => {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState('');
   const urlServer = process.env.SERVER_IP
+  const localip = process.env.EXPO_PUBLIC_LOCAL_IP
   
-  console.log(urlServer)
-  console.log(urlServer)
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome Back</Text>
@@ -26,7 +26,7 @@ const Signin = () => {
         initialValues={{ email: "test3@gmail.com", password: "111111" }}
         onSubmit={async (values) => {
           try {
-            const response = await fetch(`http://192.168.1.5:5001/login`, {
+            const response = await fetch(`http://${localip}:5001/login`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
