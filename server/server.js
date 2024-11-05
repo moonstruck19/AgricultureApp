@@ -165,6 +165,40 @@ app.post('/addAnimal', async(req, res) => {
     }
 })
 
+app.post('/addEmp', async(req, res) => {
+    const { emp_name, emp_age, emp_phone, emg_address, emp_salary } = req.body
+
+    try {
+        await Emp.create({
+            emp_name: emp_name,
+            emp_age: emp_age,
+            emp_phone: emp_phone,
+            emg_address: emg_address,
+            emp_salary: emp_salary,
+        })
+        res.status(201).send({
+            status: "ok",
+            message: "Emp add successfully"
+        })
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            message: error.message
+        })
+    }
+})
+app.get('/fetchEmp', async(req, res) => {
+    try {
+        const data = await Emp.find({})
+        res.send({
+            status: "ok",
+            data: data
+        })
+
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 app.get('/fetchCrop', async(req, res) => {
     try {

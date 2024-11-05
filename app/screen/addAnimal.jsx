@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Stylesheet } from "react-native";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { addAnimalStyle } from '../style/addAnimalStyle'
 
 const validationAnimal = Yup.object().shape({
   animal_name: Yup.string().required('Name is required'),
@@ -54,7 +55,7 @@ const AddAnimal = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={addAnimalStyle.container}>
       <Formik
         initialValues={{ animal_name: "", animal_date: date, animal_details: "", animal_quantity: "" }}
         onSubmit={(values) => handleAddAnimal(values)}
@@ -70,30 +71,30 @@ const AddAnimal = () => {
           setFieldValue,
         }) => (
           <>
-            <View style={styles.section}>
-              <Text style={styles.label}>Name</Text>
-              <View style={styles.inline}>
+            <View style={addAnimalStyle.section}>
+              <Text style={addAnimalStyle.label}>Name</Text>
+              <View style={addAnimalStyle.inline}>
                 <TextInput
-                  style={styles.input}
+                  style={addAnimalStyle.input}
                   onChangeText={handleChange('animal_name')}
                   onBlur={handleBlur('animal_name')}
                   value={values.animal_name}
                 />
               </View>
               {touched.animal_name && errors.animal_name && (
-                <Text style={styles.errorText}>{errors.animal_name}</Text>
+                <Text style={addAnimalStyle.errorText}>{errors.animal_name}</Text>
               )}
             </View>
 
-            <View style={styles.section}>
-              <Text style={styles.label}>Date</Text>
-              <View style={styles.inline}>
-                <TouchableOpacity onPress={() => setShowPicker(true)} style={styles.dateButton}>
+            <View style={addAnimalStyle.section}>
+              <Text style={addAnimalStyle.label}>Date</Text>
+              <View style={addAnimalStyle.inline}>
+                <TouchableOpacity onPress={() => setShowPicker(true)} style={addAnimalStyle.dateButton}>
                   <Text>{values.animal_date ? values.animal_date.toDateString() : "Choose Date"}</Text>
                 </TouchableOpacity>
                 {showPicker && (
                   <DateTimePicker
-                    key={date.toISOString()} 
+                    key={date.toISOString()}
                     mode="date"
                     value={values.animal_date || date}
                     onChange={(event, selectedDate) => handleDateChange(event, selectedDate, setFieldValue)}
@@ -101,33 +102,33 @@ const AddAnimal = () => {
                 )}
               </View>
               {touched.animal_date && errors.animal_date && (
-                <Text style={styles.errorText}>{errors.animal_date}</Text>
+                <Text style={addAnimalStyle.errorText}>{errors.animal_date}</Text>
               )}
             </View>
 
-            <View style={styles.section}>
-              <Text style={styles.label}>Details</Text>
+            <View style={addAnimalStyle.section}>
+              <Text style={addAnimalStyle.label}>Details</Text>
               <TextInput
                 onChangeText={(text) => {
                   setanimalDetails(text);
                   handleChange('animal_details')(text);
                 }}
                 onBlur={handleBlur('animal_details')}
-                style={styles.textArea}
+                style={addAnimalStyle.textArea}
                 multiline={true}
                 maxLength={45}
                 value={values.animal_details}
               />
-              <Text style={styles.textCount}>{animalDetails.length}/45</Text>
+              <Text style={addAnimalStyle.textCount}>{animalDetails.length}/45</Text>
               {touched.animal_details && errors.animal_details && (
-                <Text style={styles.errorText}>{errors.animal_details}</Text>
+                <Text style={addAnimalStyle.errorText}>{errors.animal_details}</Text>
               )}           
             </View>
-            <View style={styles.section}>
-              <Text style={styles.label}>Quantity</Text>
-              <View style={styles.inline}>
+            <View style={addAnimalStyle.section}>
+              <Text style={addAnimalStyle.label}>Quantity</Text>
+              <View style={addAnimalStyle.inline}>
               <TextInput
-                style={styles.input}
+                style={addAnimalStyle.input}
                 keyboardType="numeric" // Ensures numeric keyboard for quantity
                 onChangeText={handleChange('animal_quantity')}
                 onBlur={handleBlur('animal_quantity')}
@@ -135,11 +136,11 @@ const AddAnimal = () => {
               />
               </View>
               {touched.animal_quantity && errors.animal_quantity && (
-                <Text style={styles.errorText}>{errors.animal_quantity}</Text>
+                <Text style={addAnimalStyle.errorText}>{errors.animal_quantity}</Text>
               )}
             </View>
-            <TouchableOpacity onPress={handleSubmit} style={styles.button}>
-                <Text style={styles.buttonText}>CONFIRM</Text>
+            <TouchableOpacity onPress={handleSubmit} style={addAnimalStyle.button}>
+                <Text style={addAnimalStyle.buttonText}>CONFIRM</Text>
             </TouchableOpacity>
           </>
         )}
@@ -149,67 +150,3 @@ const AddAnimal = () => {
 };
 
 export default AddAnimal;
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 10,
-    flex: 1,
-    paddingHorizontal: 20,
-    backgroundColor: "#F8F8F8",
-  },
-  section: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 12,
-    fontWeight: "500",
-    marginBottom: 8,
-  },
-  textArea: {
-    backgroundColor: "#fff",
-    borderRadius: 15,
-    padding: 15,
-    height: 80,
-    fontSize: 16,
-  },
-  textCount: {
-    textAlign: "right",
-    fontSize: 12,
-    color: "#aaa",
-    marginTop: 5,
-  },
-  input: {
-    backgroundColor: "#fff",
-    borderRadius: 15,
-    padding: 15,
-    fontSize: 16,
-    flex: 1,
-  },
-  inline: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  button: {
-    width: "100%",
-    paddingVertical: 15,
-    borderRadius: 10,
-    backgroundColor: "#7f00ff",
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  errorText: {
-    color: "red",
-    fontSize: 12,
-    marginTop: 5,
-  },
-  dateButton: {
-    backgroundColor: "#fff",
-    borderRadius: 15,
-    padding: 15,
-  },
-});
