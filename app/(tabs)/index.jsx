@@ -1,8 +1,9 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Pressable } from "react-native";
+import { Text, View, TouchableOpacity, FlatList, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Link } from "expo-router";
+import { tabHome } from '../style/tabHome'
 
 
 const tasks = [
@@ -34,12 +35,12 @@ const tasks = [
 
 const TabHome = () => {
   return (
-    <View style={styles.container}>
+    <View style={tabHome.container}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={tabHome.header}>
         <View>
-          <Text style={styles.greeting}>Good morning!</Text>
-          <Text style={styles.date}>19 Sept, 2024</Text>
+          <Text style={tabHome.greeting}>Good morning!</Text>
+          <Text style={tabHome.date}>19 Sept, 2024</Text>
         </View>
         <Link href="/screen/addTask">
           <Ionicons name="add" size={24} color="black" />
@@ -47,27 +48,27 @@ const TabHome = () => {
       </View>
 
       {/* Summary Section */}
-      <View style={styles.summaryContainer}>
-        <View style={styles.summaryBox}>
-          <Text style={styles.summaryText}>Assigned tasks</Text>
-          <Text style={styles.summaryNumber}>21</Text>
+      <View style={tabHome.summaryContainer}>
+        <View style={tabHome.summaryBox}>
+          <Text style={tabHome.summaryText}>Assigned tasks</Text>
+          <Text style={tabHome.summaryNumber}>21</Text>
         </View>
-        <View style={styles.summaryBox}>
-          <Text style={styles.summaryText}>Completed tasks</Text>
-          <Text style={styles.summaryNumber}>31</Text>
+        <View style={tabHome.summaryBox}>
+          <Text style={tabHome.summaryText}>Completed tasks</Text>
+          <Text style={tabHome.summaryNumber}>31</Text>
         </View>
       </View>
 
       {/* Task Filter Tabs */}
-      <View style={styles.tabsContainer}>
-        <TouchableOpacity style={styles.tabButtonActive}>
-          <Text style={styles.tabTextActive}>All tasks</Text>
+      <View style={tabHome.tabsContainer}>
+        <TouchableOpacity style={tabHome.tabButtonActive}>
+          <Text style={tabHome.tabTextActive}>All tasks</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.tabButton}>
-          <Text style={styles.tabText}>In progress</Text>
+        <TouchableOpacity style={tabHome.tabButton}>
+          <Text style={tabHome.tabText}>In progress</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.tabButton}>
-          <Text style={styles.tabText}>Completed</Text>
+        <TouchableOpacity style={tabHome.tabButton}>
+          <Text style={tabHome.tabText}>Completed</Text>
         </TouchableOpacity>
       </View>
 
@@ -76,17 +77,17 @@ const TabHome = () => {
         data={tasks}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={styles.taskCard}>
-            <View style={styles.taskHeader}>
-              <Text style={styles.taskTitle}>{item.title}</Text>
-              <Text style={[styles.taskStatus, item.status === "New task" ? styles.newTask : styles.ongoingTask]}>
+          <View style={tabHome.taskCard}>
+            <View style={tabHome.taskHeader}>
+              <Text style={tabHome.taskTitle}>{item.title}</Text>
+              <Text style={[tabHome.taskStatus, item.status === "New task" ? tabHome.newTask : tabHome.ongoingTask]}>
                 {item.status}
               </Text>
             </View>
-            <Text style={styles.taskDescription}>{item.description}</Text>
-            <View style={styles.taskFooter}>
-              <Text style={styles.taskCategory}>{item.category}</Text>
-              <Text style={styles.dueDate}>{item.dueDate}</Text>
+            <Text style={tabHome.taskDescription}>{item.description}</Text>
+            <View style={tabHome.taskFooter}>
+              <Text style={tabHome.taskCategory}>{item.category}</Text>
+              <Text style={tabHome.dueDate}>{item.dueDate}</Text>
             </View>
           </View>
         )}
@@ -94,134 +95,5 @@ const TabHome = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: "#f5f5f5",
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  greeting: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
-  },
-  date: {
-    fontSize: 14,
-    color: "#777",
-  },
-  summaryContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 20,
-  },
-  summaryBox: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 15,
-    width: "48%",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  summaryText: {
-    fontSize: 14,
-    color: "#777",
-  },
-  summaryNumber: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  tabsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    marginBottom: 20,
-  },
-  tabButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-    backgroundColor: "#e0e0e0",
-    borderRadius: 20,
-  },
-  tabButtonActive: {
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-    backgroundColor: "#6a4bff",
-    borderRadius: 20,
-  },
-  tabText: {
-    color: "#333",
-    fontSize: 14,
-  },
-  tabTextActive: {
-    color: "#fff",
-    fontSize: 14,
-  },
-  taskCard: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 15,
-    marginBottom: 15,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  taskHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 8,
-  },
-  taskTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  taskStatus: {
-    fontSize: 12,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 15,
-    textAlign: "center",
-  },
-  newTask: {
-    backgroundColor: "#6a4bff",
-    color: "#fff",
-  },
-  ongoingTask: {
-    backgroundColor: "#ffaf3e",
-    color: "#fff",
-  },
-  taskDescription: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 10,
-  },
-  taskFooter: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  taskCategory: {
-    fontSize: 12,
-    color: "#999",
-  },
-  dueDate: {
-    fontSize: 12,
-    color: "#999",
-  },
-});
 
 export default TabHome;

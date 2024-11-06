@@ -11,22 +11,23 @@ export const employee = StyleSheet.create({
       marginBottom: 20,
     },
     label: {
-      fontSize: 12,
+      fontSize: 14, // Slightly larger for readability
       fontWeight: "500",
       marginBottom: 8,
     },
     input: {
       backgroundColor: "#fff",
       borderRadius: 15,
-      padding: 15,
+      paddingVertical: 18, // Increased padding for taller input
+      paddingHorizontal: 15,
       fontSize: 16,
-      flex: 1,
+      height: 55, // Set a minimum height for the input field
       borderWidth: 1,
       borderColor: "#E5E5EA",
     },
     button: {
       width: "100%",
-      paddingVertical: 15,
+      paddingVertical: 18, // Increased padding for a larger button
       borderRadius: 10,
       backgroundColor: "#34C759",
       alignItems: "center",

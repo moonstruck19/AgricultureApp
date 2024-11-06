@@ -166,14 +166,14 @@ app.post('/addAnimal', async(req, res) => {
 })
 
 app.post('/addEmp', async(req, res) => {
-    const { emp_name, emp_age, emp_phone, emg_address, emp_salary } = req.body
+    const { emp_name, emp_age, emp_phone, emp_address, emp_salary } = req.body
 
     try {
         await Emp.create({
             emp_name: emp_name,
             emp_age: emp_age,
             emp_phone: emp_phone,
-            emg_address: emg_address,
+            emp_address: emp_address,
             emp_salary: emp_salary,
         })
         res.status(201).send({

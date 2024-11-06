@@ -1,29 +1,37 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { View, Text, TextInput, FlatList, StyleSheet, RefreshControl } from "react-native";
 import { Link } from "expo-router";
-
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
   const [filteredEmployees, setFilteredEmployees] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const navigation = useNavigation();
+  const [refreshing, setRefreshing] = useState(false);
   const localip = process.env.EXPO_PUBLIC_LOCAL_IP;
 
+  const fetchEmp = () => {
+    setRefreshing(true);
+    fetch(`http://${localip}:5001/fetchEmp`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((employees) => {
+        setEmployees(employees.data);
+        setFilteredEmployees(employees.data); // Set both lists on fetch
+      })
+      .catch((error) => {
+        console.error("Error fetching Emp Data: ", error);
+      })
+      .finally(() => setRefreshing(false));
+  };
+
   useEffect(() => {
-    fetchEmployees();
+    fetchEmp();
   }, []);
 
-  const fetchEmployees = async () => {
-    try {
-      const response = await fetch(`http://${localip}:5001/fetchEmp`);
-      const data = await response.json();
-      setEmployees(data);
-      setFilteredEmployees(data);
-    } catch (error) {
-      console.error("Error fetching employees:", error);
-    }
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchEmp(); // Call fetchEmp with parentheses
   };
 
   const handleSearch = (text) => {
@@ -37,7 +45,7 @@ const EmployeeList = () => {
       setFilteredEmployees(employees);
     }
   };
-  
+
   const renderEmployeeItem = ({ item }) => (
     <View style={styles.employeeItem}>
       <Text style={styles.employeeName}>{item.emp_name}</Text>
@@ -64,10 +72,13 @@ const EmployeeList = () => {
 
       <FlatList
         data={filteredEmployees}
-        keyExtractor={(item) => item._id.toString()}
         renderItem={renderEmployeeItem}
+        keyExtractor={(item) => item._id} // Adjusted keyExtractor
         contentContainerStyle={styles.listContainer}
         ListEmptyComponent={<Text style={styles.emptyText}>No employees found.</Text>}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </View>
   );

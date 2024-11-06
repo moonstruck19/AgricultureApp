@@ -6,8 +6,10 @@ import { employee } from '../style/employee'
 
 const validationEmployee = Yup.object().shape({
   emp_name: Yup.string().max(100, 'Name is too long').required('Name is required'),
-  emp_age: Yup.string().required('Age is required').max(3, 'Age should be realistic'),
-  emp_phone: Yup.number().required('Phone number is required').max(100, 'Phone number too long'),
+  emp_age: Yup.string().required('Age is required').max(2, 'Age should be realistic'),
+  emp_phone: Yup.string()
+  .matches(/^\d{10}$/, 'Phone number must be exactly 10 digits')
+  .required('Phone number is required'),
   emp_address: Yup.string().required('Address is required').max(100, 'Address is too long'),
   emp_salary: Yup.number().required('Salary is required').min(1000, 'Salary too low').max(5000, 'Salary too high'),
 });

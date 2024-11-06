@@ -1,61 +1,58 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Modal, FlatList } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { PermissionsAndroid } from 'react-native';
-import Contacts from 'react-native-contacts';
+import { addTask } from '../style/addTask';
 
 const validationTask = Yup.object().shape({
   task_name: Yup.string().required('Task Name is required'),
   task_description: Yup.string().required('Task Description is required'),
-  // task_member: Yup.string().required('Task Member is required'),
 });
 
-const handleAddMember = async (setFieldValue) => {
-  const { status } = await Contacts.requestPermissionsAsync();
-  if (status === 'granted') {
-    const { data } = await Contacts.getContactsAsync({
-      fields: [Contacts.Fields.Name],
-    });
-
-    if (data.length > 0) {
-      const selectedContact = data[0].name;
-
-      setTaskMember(selectedContact);
-      setFieldValue('task_member', selectedContact);
-    } else {
-      alert('No contacts found');
-    }
-  } else {
-    alert('Permission to access contacts was denied');
-  }
-};
-
 const AddTask = () => {
-  const [taskDescription, setTaskDescription] = useState("")
-  const [taskMember, setTaskMember] = useState("")
+  const [taskDescription, setTaskDescription] = useState("");
+  const [taskMember, setTaskMember] = useState("");
+  const [employees, setEmployees] = useState([]);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const localip = process.env.EXPO_PUBLIC_LOCAL_IP;
 
+  const fetchEmp = async () => {
+    try {
+      const response = await fetch(`http://${localip}:5001/fetchEmp`);
+      const data = await response.json();
+      setEmployees(data.data);
+    } catch (error) {
+      console.error("Error fetching Emp Data: ", error);
+    }
+  };
+
+  const handleOpenModal = async () => {
+    await fetchEmp();  // Fetch employee data when opening modal
+    setModalVisible(true);
+  };
+
+  const handleSelectMember = (member) => {
+    setTaskMember(member.emp_name);  // Set selected employee as task member
+    setModalVisible(false);  // Close modal after selection
+  };
 
   const handleAddTask = async (values) => {
     try {
-      const response = await fetch(`http://192.168.1.5:5001/addTask`, {
+      const response = await fetch(`http://${localip}:5001/addTask`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           task_name: values.task_name,
           task_description: values.task_description,
-          task_member: values.task_member,
+          task_member: taskMember,
         }),
       });
-
-      const result = await response.json();
 
       if (response.ok) {
         alert("Task added successfully!");
       } else {
+        const result = await response.json();
         alert(result.message || "Error adding task.");
       }
     } catch (error) {
@@ -64,10 +61,10 @@ const AddTask = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={addTask.container}>
       <Formik
         initialValues={{ task_name: "", task_description: "", task_member: "" }}
-        onSubmit={(values) => handleAddTask(values)}
+        onSubmit={handleAddTask}
         validationSchema={validationTask}
       >
         {({
@@ -79,68 +76,74 @@ const AddTask = () => {
           touched,
         }) => (
           <>
-            <View style={styles.section}>
-              <Text style={styles.label}>Title</Text>
-              <View style={styles.inline}>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={handleChange('task_name')}
-                  onBlur={handleBlur('task_name')}
-                  value={values.task_name}
-                />
-              </View>
+            <View style={addTask.section}>
+              <Text style={addTask.label}>Title</Text>
+              <TextInput
+                style={addTask.input}
+                onChangeText={handleChange('task_name')}
+                onBlur={handleBlur('task_name')}
+                value={values.task_name}
+              />
               {touched.task_name && errors.task_name && (
-                <Text style={styles.errorText}>{errors.task_name}</Text>
+                <Text style={addTask.errorText}>{errors.task_name}</Text>
               )}
             </View>
 
-            <View style={styles.section}>
-              <Text style={styles.label}>Description</Text>
+            <View style={addTask.section}>
+              <Text style={addTask.label}>Description</Text>
               <TextInput
                 onChangeText={(text) => {
                   setTaskDescription(text);
                   handleChange('task_description')(text);
                 }}
                 onBlur={handleBlur('task_description')}
-                style={styles.textArea}
+                style={addTask.textArea}
                 multiline={true}
                 maxLength={45}
                 value={values.task_description}
               />
-              <Text style={styles.textCount}>{taskDescription.length}/45</Text>
+              <Text style={addTask.textCount}>{taskDescription.length}/45</Text>
               {touched.task_description && errors.task_description && (
-                <Text style={styles.errorText}>{errors.task_description}</Text>
+                <Text style={addTask.errorText}>{errors.task_description}</Text>
               )}
             </View>
 
-            <View style={styles.section}>
-              <Text style={styles.label}>Member</Text>
-              <View style={styles.inline}>
-                <View style={styles.assigned}>
+            <View style={addTask.section}>
+              <Text style={addTask.label}>Member</Text>
+              <View style={addTask.inline}>
+                <View style={addTask.assigned}>
                   <Ionicons name="person-circle" size={24} color="black" />
-                  <Text style={styles.assignedText}>{taskMember}</Text>
+                  <Text style={addTask.assignedText}>{taskMember}</Text>
                 </View>
-                <TouchableOpacity onPress={() => setTaskMember('New Member')}>
+                <TouchableOpacity onPress={handleOpenModal}>
                   <Ionicons name="add" size={24} color="black" />
                 </TouchableOpacity>
               </View>
-              {touched.task_member && errors.task_member && (
-                <Text style={styles.errorText}>{errors.task_member}</Text>
-              )}
             </View>
 
-            <View style={styles.section}>
-              <Text style={styles.label}>Deadline</Text>
-            </View>
+            <Modal visible={isModalVisible} animationType="slide">
+              <View style={addTask.modalContainer}>
+                <Text style={addTask.modalTitle}>Select a Member</Text>
+                <FlatList
+                  data={employees}
+                  keyExtractor={(item) => item._id}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={addTask.employeeItem}
+                      onPress={() => handleSelectMember(item)}
+                    >
+                      <Text style={addTask.employeeName}>{item.emp_name}</Text>
+                    </TouchableOpacity>
+                  )}
+                />
+                <TouchableOpacity onPress={() => setModalVisible(false)}>
+                  <Text style={addTask.modalClose}>Close</Text>
+                </TouchableOpacity>
+              </View>
+            </Modal>
 
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity onPress={() => handleAddMember(setFieldValue)}>
-                <Ionicons name="add" size={24} color="black" />
-              </TouchableOpacity>
-              <Text style={styles.assignedText}>{taskMember}</Text>
-            </View>
-            <TouchableOpacity onPress={handleSubmit} style={styles.button}>
-                <Text style={styles.buttonText}>CONFIRM</Text>
+            <TouchableOpacity onPress={handleSubmit} style={addTask.button}>
+              <Text style={addTask.buttonText}>CONFIRM</Text>
             </TouchableOpacity>
           </>
         )}
@@ -150,74 +153,3 @@ const AddTask = () => {
 };
 
 export default AddTask;
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 10,
-    flex: 1,
-    paddingHorizontal: 20,
-    backgroundColor: "#F8F8F8",
-  },
-  section: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 12,
-    fontWeight: "500",
-    marginBottom: 8,
-  },
-  textArea: {
-    backgroundColor: "#fff",
-    borderRadius: 15,
-    padding: 15,
-    height: 80,
-    fontSize: 16,
-  },
-  textCount: {
-    textAlign: "right",
-    fontSize: 12,
-    color: "#aaa",
-    marginTop: 5,
-  },
-  input: {
-    backgroundColor: "#fff",
-    borderRadius: 15,
-    padding: 15,
-    fontSize: 16,
-    flex: 1,
-  },
-  inline: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  assigned: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  assignedText: {
-    marginLeft: 8,
-    fontSize: 16,
-  },
-  buttonContainer: {
-    marginTop: 20,
-    alignItems: "center",
-  },
-  button: {
-    width: "100%",
-    paddingVertical: 15,
-    borderRadius: 10,
-    backgroundColor: "#7f00ff",
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  errorText: {
-    color: "red",
-    fontSize: 12,
-    marginTop: 5,
-  },
-});
