@@ -51,7 +51,7 @@ export const addCropStyles = StyleSheet.create({
       width: "100%",
       paddingVertical: 14,
       borderRadius: 12,
-      backgroundColor: "#0a593c", // Apple's green for affirmative actions
+      backgroundColor: "#0a593c",
       alignItems: "center",
     },
     buttonText: {

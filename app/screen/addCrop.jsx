@@ -11,17 +11,19 @@ const validationCrop = Yup.object().shape({
 });
 
 const AddCrop = () => {
-  const [cropDetails, setCropDetails] = useState("");
-  const [date, setDate] = useState(new Date());
-  const [showPicker, setShowPicker] = useState(false);
+  const [cropDetails, setCropDetails] = useState("")
+  const [date, setDate] = useState(new Date())
+  const [showPicker, setShowPicker] = useState(false)
   const localip = process.env.EXPO_PUBLIC_LOCAL_IP
+
+  const today = new Date().toISOString().split('T')[0] // Start date set to today
 
   const handleDateChange = (event, selectedDate, setFieldValue) => {
     if (event.type === 'set') {
-      const currentDate = selectedDate || date;
-      setDate(currentDate);
-      setFieldValue("crop_date", currentDate); // Set date in Formik's values
-      setShowPicker(false); // Close the picker after selection
+      const currentDate = selectedDate || date
+      setDate(currentDate)
+      setFieldValue("crop_date", currentDate) // Set date in Formik's values
+      setShowPicker(false) // Close the picker after selection
     }
   };
 
@@ -35,7 +37,7 @@ const AddCrop = () => {
         body: JSON.stringify({
           crop_name: values.crop_name,
           crop_details: values.crop_details,
-          crop_date: values.crop_date,
+          crop_date: today,
         }),
       });
 
@@ -45,17 +47,17 @@ const AddCrop = () => {
         console.log(response);
         alert("Crops added successfully!");
       } else {
-        alert(result.message || "Error adding crop.");
+        alert(result.message || "Error adding crop.")
       }
     } catch (error) {
-      alert("Error: " + error.message);
+      alert("Error: " + error.message)
     }
   };
 
   return (
     <View style={addCropStyles.container}>
       <Formik
-        initialValues={{ crop_name: "", crop_date: date, crop_details: "" }}
+        initialValues={{ crop_name: "", crop_details: "" }}
         onSubmit={(values) => handleAddCrop(values)}
         validationSchema={validationCrop}
       >
@@ -88,20 +90,13 @@ const AddCrop = () => {
               <Text style={addCropStyles.label}>Date</Text>
               <View style={addCropStyles.inline}>
                 <TouchableOpacity onPress={() => setShowPicker(true)} style={addCropStyles.dateButton}>
-                  <Text>{values.crop_date ? values.crop_date.toDateString() : "Choose Date"}</Text>
-                </TouchableOpacity>
-                {showPicker && (
-                  <DateTimePicker
-                    key={date.toISOString()} 
-                    mode="date"
-                    value={values.crop_date || date}
-                    onChange={(event, selectedDate) => handleDateChange(event, selectedDate, setFieldValue)}
+                  <TextInput
+                    // style={addTask.input}
+                    value={today}
+                    editable={false}
                   />
-                )}
+                </TouchableOpacity>
               </View>
-              {touched.crop_date && errors.crop_date && (
-                <Text style={addCropStyles.errorText}>{errors.crop_date}</Text>
-              )}
             </View>
 
             <View style={addCropStyles.section}>

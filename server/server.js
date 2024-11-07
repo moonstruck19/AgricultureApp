@@ -68,7 +68,6 @@ app.post('/login', async (req, res) => {
     const { user_email, user_password } = req.body;
 
     try {
-        // Check if user exists
         const user = await User.findOne({ user_email: user_email });
 
         if (!user) {
@@ -78,7 +77,6 @@ app.post('/login', async (req, res) => {
             });
         }
 
-        // Compare the provided password with the hashed password in the database
         const isPasswordValid = await bcrypt.compare(user_password, user.user_password);
 
         if (!isPasswordValid) {
@@ -88,7 +86,6 @@ app.post('/login', async (req, res) => {
             });
         }
 
-        // If email and password are valid, send success response
         res.send({
             status: "ok",
             message: "Login successful!",
@@ -102,12 +99,14 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/addTask', async(req, res) => {
-    const { task_name, task_description, task_member } = req.body
+    const { task_name, task_description, task_date_start, task_date_end, task_member } = req.body
 
     try { 
         await Task.create({
             task_name: task_name,
             task_description: task_description,
+            task_date_start: task_date_start,
+            task_date_end: task_date_end,
             task_member: task_member,
         });
         res.status(201).send({
@@ -216,6 +215,18 @@ app.get('/fetchCrop', async(req, res) => {
 app.get('/fetchAnimal', async(req, res) => {
     try {
         const data = await Animal.find({})
+        res.send({
+            status: "ok",
+            data: data
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+app.get('/fetchTask', async(req, res) => {
+    try {
+        const data = await Task.find({})
         res.send({
             status: "ok",
             data: data

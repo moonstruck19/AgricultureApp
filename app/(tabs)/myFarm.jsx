@@ -19,13 +19,13 @@ const MyFarm = () => {
         })
             .then((res) => res.json())
             .then((dataCrop) => {
-                setDataCrop(dataCrop.data);
+                setDataCrop(dataCrop.data)
             })
             .catch((error) => {
-                console.error("Error fetching crops data: ", error);
+                console.error("Error fetching crops data: ", error)
             })
-            .finally(() => setRefreshing(false));
-    };
+            .finally(() => setRefreshing(false))
+    }
 
     const fetchAnimal = () => {
         fetch(`http://${localip}:5001/fetchAnimal`, {
@@ -33,12 +33,12 @@ const MyFarm = () => {
         })
             .then((res) => res.json())
             .then((dataAnimal) => {
-                setDataAnimal(dataAnimal.data);
+                setDataAnimal(dataAnimal.data)
             })
             .catch((error) => {
-                console.error("Error fetching animals data: ", error);
+                console.error("Error fetching animals data: ", error)
             })
-            .finally(() => setRefreshing(false));
+            .finally(() => setRefreshing(false))
     };
 
     useEffect(() => {
@@ -50,7 +50,7 @@ const MyFarm = () => {
         setRefreshing(true)
         fetchCrop()
         fetchAnimal()
-    };
+    }
 
     const renderCard = ({ item }) => (
         <View style={myFarm.card}>

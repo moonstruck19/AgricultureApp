@@ -12,10 +12,12 @@ const validationAnimal = Yup.object().shape({
 });
 
 const AddAnimal = () => {
-  const [animalDetails, setanimalDetails] = useState("");
-  const [date, setDate] = useState(new Date());
-  const [showPicker, setShowPicker] = useState(false);
+  const [animalDetails, setanimalDetails] = useState("")
+  const [date, setDate] = useState(new Date())
+  const [showPicker, setShowPicker] = useState(false)
   const localip = process.env.EXPO_PUBLIC_LOCAL_IP
+
+  const today = new Date().toISOString().split('T')[0]
 
   const handleDateChange = (event, selectedDate, setFieldValue) => {
     if (event.type === 'set') {
@@ -35,7 +37,7 @@ const AddAnimal = () => {
         },
         body: JSON.stringify({
           animal_name: values.animal_name,
-          animal_date: values.animal_date,
+          animal_date: today,
           animal_details: values.animal_details,
           animal_quantity: values.animal_quantity,
         }),
@@ -57,7 +59,7 @@ const AddAnimal = () => {
   return (
     <View style={addAnimalStyle.container}>
       <Formik
-        initialValues={{ animal_name: "", animal_date: date, animal_details: "", animal_quantity: "" }}
+        initialValues={{ animal_name: "", animal_details: "", animal_quantity: "" }}
         onSubmit={(values) => handleAddAnimal(values)}
         validationSchema={validationAnimal}
       >
@@ -89,21 +91,14 @@ const AddAnimal = () => {
             <View style={addAnimalStyle.section}>
               <Text style={addAnimalStyle.label}>Date</Text>
               <View style={addAnimalStyle.inline}>
-                <TouchableOpacity onPress={() => setShowPicker(true)} style={addAnimalStyle.dateButton}>
-                  <Text>{values.animal_date ? values.animal_date.toDateString() : "Choose Date"}</Text>
-                </TouchableOpacity>
-                {showPicker && (
-                  <DateTimePicker
-                    key={date.toISOString()}
-                    mode="date"
-                    value={values.animal_date || date}
-                    onChange={(event, selectedDate) => handleDateChange(event, selectedDate, setFieldValue)}
+                <TouchableOpacity onPress={() => setShowPicker(false)} style={addAnimalStyle.dateButton}>
+                  <TextInput
+                    // style={addTask.input}
+                    value={today}
+                    editable={false}
                   />
-                )}
+                </TouchableOpacity>
               </View>
-              {touched.animal_date && errors.animal_date && (
-                <Text style={addAnimalStyle.errorText}>{errors.animal_date}</Text>
-              )}
             </View>
 
             <View style={addAnimalStyle.section}>
