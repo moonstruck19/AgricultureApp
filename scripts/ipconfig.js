@@ -38,9 +38,9 @@ if (fs.existsSync(envPath)) {
 }
 
 // Remove any existing LOCAL_IP entry
-const envLines = envContent.split('\n').filter(line => !line.startsWith('LOCAL_IP='));
+const envLines = envContent.split('\n').filter(line => !line.startsWith('EXPO_PUBLIC_LOCAL_IP='));
 // Add the new LOCAL_IP entry
-envLines.push(`LOCAL_IP=${ip}`);
+envLines.push(`EXPO_PUBLIC_LOCAL_IP=${ip}`);
 
 // Write updated content back to .env
 fs.writeFileSync(envPath, envLines.join('\n'), { encoding: 'utf8' });

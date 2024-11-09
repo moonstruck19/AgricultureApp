@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export const tabHome = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     paddingVertical: 10,
     backgroundColor: "#f5f5f5",
   },
@@ -77,7 +77,7 @@ export const tabHome = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 10,
     padding: 15,
-    marginBottom: 15,
+    marginBottom: 5,
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
@@ -102,11 +102,11 @@ export const tabHome = StyleSheet.create({
     textAlign: "center",
   },
   newTask: {
-    backgroundColor: "#cf2727",
+    backgroundColor: "#0a593c",
     color: "#fff",
   },
   ongoingTask: {
-    backgroundColor: "#0a593c",
+    backgroundColor: "#cf2727",
     color: "#fff",
   },
   taskDescription: {
@@ -174,5 +174,50 @@ export const tabHome = StyleSheet.create({
   closeButton: {
     marginTop: 10,
     alignItems: "center",
+  },
+  swipeOptions: {
+    position: "absolute",
+    right: 0,
+    top: 0,
+    height: '100%',
+    justifyContent: "center",
+    backgroundColor: "#fff",
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: -3, height: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 5,
+    width: 100,
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+  },
+
+  swipeButton: {
+    backgroundColor: "#ff6f61", // iOS red button color
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    marginBottom: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  swipeText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "bold",
+    textTransform: "uppercase",
+  },
+
+  // Edit button style
+  editButton: {
+    backgroundColor: "#4CAF50", // Green for edit
+  },
+
+  // Delete button style
+  deleteButton: {
+    backgroundColor: "#ff3b30", // Red for delete
   },
 });

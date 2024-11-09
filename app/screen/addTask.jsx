@@ -10,7 +10,6 @@ const validationTask = Yup.object().shape({
   task_name: Yup.string().required('Task Name is required'),
   task_description: Yup.string().required('Task Description is required'),
   task_date_end: Yup.string()
-    // .required('End date is required')
     .min(new Date(), "End date must be later than the start date"),
 });
 
@@ -50,7 +49,8 @@ const AddTask = () => {
   };
 
 
-  const today = new Date().toISOString().split('T')[0] 
+  const today = new Date().toISOString().split('T')[0]
+  const taskStatus = "In progress"
   const handleAddTask = async (values) => {
 
     try {
@@ -63,6 +63,7 @@ const AddTask = () => {
           task_date_start: today,
           task_date_end: taskDateEnd.toISOString().split('T')[0],
           task_member: taskMember,
+          task_status: taskStatus
         }),
       });
 

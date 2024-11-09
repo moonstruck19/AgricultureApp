@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "server": "nodemon server/server.js",
-    "start": "expo start",
+    "start": "expo start && node ./scripts/ipconfig.js",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "set-ip": "node ./scripts/ipconfig.js",
@@ -60,6 +60,7 @@
     "react-native-screens": "3.31.1",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.10",
+    "react-swipeable": "^7.0.2",
     "yup": "^1.4.0"
   },
   "devDependencies": {
