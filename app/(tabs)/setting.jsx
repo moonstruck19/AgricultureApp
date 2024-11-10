@@ -5,11 +5,10 @@ import Icon from "react-native-vector-icons/FontAwesome";
 const Settings = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Settings</Text>
       <View style={styles.section}>
         <TouchableOpacity style={styles.option}>
           <Icon name="user" size={24} color="#000" />
-          <Text style={styles.optionText}>Account</Text>
+          <Text style={styles.optionText}>Change password</Text>
           <Icon
             name="angle-right"
             size={24}
@@ -20,36 +19,6 @@ const Settings = () => {
         <TouchableOpacity style={styles.option}>
           <Icon name="bell" size={20} color="#000" />
           <Text style={styles.optionText}>Notifications</Text>
-          <Icon
-            name="angle-right"
-            size={24}
-            color="#999"
-            style={styles.optionIcon}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.option}>
-          <Icon name="lock" size={24} color="#000" />
-          <Text style={styles.optionText}>Privacy</Text>
-          <Icon
-            name="angle-right"
-            size={24}
-            color="#999"
-            style={styles.optionIcon}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.option}>
-          <Icon name="info-circle" size={24} color="#000" />
-          <Text style={styles.optionText}>About</Text>
-          <Icon
-            name="angle-right"
-            size={24}
-            color="#999"
-            style={styles.optionIcon}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.option}>
-          <Icon name="sign-out" size={24} color="#000" />
-          <Text style={styles.optionText}>Logout</Text>
           <Icon
             name="angle-right"
             size={24}

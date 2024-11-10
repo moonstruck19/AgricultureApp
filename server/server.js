@@ -309,6 +309,48 @@ app.get('/fetchEmp', async(req, res) => {
     }
 })
 
+app.delete('/deleteEmp', async (req, res) => {
+    const { empId } = req.body
+  
+    try {
+      const emp = await Emp.findByIdAndDelete(empId) // Ensure Employee model is used here
+  
+      if (emp) {
+        res.status(200).json({ message: "Employee deleted successfully" })
+      } else {
+        res.status(404).json({ message: "Employee not found" })
+      }
+    } catch (error) {
+      console.error("Error deleting employee:", error)
+      res.status(500).json({ message: "Internal server error" })
+    }
+})  
+
+app.put('/editEmp', async (req, res) => {
+  const { empId, updatedData } = req.body;
+
+  if (!empId || !updatedData) {
+    return res.status(400).json({ message: "Invalid request. Missing empId or updatedData" });
+  }
+
+  try {
+    const emp = await Emp.findByIdAndUpdate(
+      empId,
+      { $set: updatedData },
+      { new: true }
+    );
+
+    if (emp) {
+      res.status(200).json({ message: "Employee updated successfully", emp });
+    } else {
+      res.status(404).json({ message: "Employee not found" });
+    }
+  } catch (error) {
+    console.error("Error updating employee:", error);
+    res.status(500).json({ message: "Internal server error", error: error.message });
+  }
+});
+
 
 // Start server
 app.listen(5001, () => {

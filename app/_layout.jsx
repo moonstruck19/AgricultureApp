@@ -42,11 +42,6 @@ const RootLayout = () => {
                     headerShown: true,
                     title: 'New Task',
                     headerBackTitle: 'Back',
-                    headerRight: () => 
-                        (<Button 
-                            title="Done"
-                            color="#007AFF"
-                        />),
                     headerBackTitleStyle: {
                         fontSize: 16
                     }

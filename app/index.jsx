@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
-import { Link } from 'expo-router';
-import { Pressable } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native'
+import React from 'react'
+import { Link } from 'expo-router'
+import { Pressable } from 'react-native'
 
 const HomePage = () => {
   return (
@@ -20,8 +20,8 @@ const HomePage = () => {
         </Link>
       </Pressable>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -50,6 +50,6 @@ const styles = StyleSheet.create({
     color: '#FFF',
     textAlign: 'center',
   },
-});
+})
 
-export default HomePage;
+export default HomePage

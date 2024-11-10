@@ -1,22 +1,21 @@
-import { StyleSheet, Text, View, TextInput, Pressable } from 'react-native';
-import React, { useState } from 'react';
-import { Link } from 'expo-router';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import { TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
-import Config from "react-native-config";
+import { StyleSheet, Text, View, TextInput, Pressable } from 'react-native'
+import React, { useState } from 'react'
+import { Link } from 'expo-router'
+import { Formik } from 'formik'
+import * as Yup from 'yup'
+import { TouchableOpacity } from 'react-native'
+import { useRouter } from 'expo-router'
+import Config from "react-native-config"
 
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required('Email is required').email().label("Email"),
   password: Yup.string().required('Password is required').min(4).label("Password"),
-});
+})
 
 const Signin = () => {
-  const router = useRouter();
-  const [errorMessage, setErrorMessage] = useState('');
-  const urlServer = process.env.SERVER_IP
+  const router = useRouter()
+  const [errorMessage, setErrorMessage] = useState('')
   const localip = process.env.EXPO_PUBLIC_LOCAL_IP
   
   return (
@@ -35,16 +34,16 @@ const Signin = () => {
                 user_email: values.email,
                 user_password: values.password,
               }),
-            });
+            })
 
-            const data = await response.json();
+            const data = await response.json()
             if (data.status === "ok") {
-              router.push("/(tabs)");
+              router.push("/(tabs)")
             } else {
-              setErrorMessage(data.message || "Login failed. Please try again.");
+              setErrorMessage(data.message || "Login failed. Please try again.")
             }
           } catch (error) {
-            setErrorMessage("An error occurred. Please try again later.");
+            setErrorMessage("An error occurred. Please try again later.")
             console.log(error)
           }
         }}
@@ -97,10 +96,10 @@ const Signin = () => {
         </Pressable>
       </Text>
     </View>
-  );
-};
+  )
+}
 
-export default Signin;
+export default Signin
 
 const styles = StyleSheet.create({
   container: {
@@ -165,4 +164,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 10,
   },
-});
+})

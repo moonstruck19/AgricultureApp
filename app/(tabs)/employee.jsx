@@ -1,144 +1,187 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, FlatList, StyleSheet, RefreshControl } from "react-native";
-import { Link } from "expo-router";
+import React, { useState, useEffect } from "react"
+import { View, Text, TextInput, FlatList, RefreshControl, Modal, Button, TouchableOpacity } from "react-native"
+import { Link } from "expo-router"
+import { employee } from "../style/employee"
 
-const EmployeeList = () => {
-  const [employees, setEmployees] = useState([]);
-  const [filteredEmployees, setFilteredEmployees] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [refreshing, setRefreshing] = useState(false);
-  const localip = process.env.EXPO_PUBLIC_LOCAL_IP;
+const Employee = () => {
+  const [employees, setEmployees] = useState([])
+  const [filteredEmployees, setFilteredEmployees] = useState([])
+  const [searchTerm, setSearchTerm] = useState("")
+  const [refreshing, setRefreshing] = useState(false)
+  const [selectedEmployee, setSelectedEmployee] = useState(null)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [empName, setEmpName] = useState("")
+  const [empAge, setEmpAge] = useState("")
+  const [empPhone, setEmpPhone] = useState("")
+  const [empAddress, setEmpAddress] = useState("")
+  const [empSalary, setEmpSalary] = useState("")
+  const localip = process.env.EXPO_PUBLIC_LOCAL_IP
 
   const fetchEmp = () => {
-    setRefreshing(true);
-    fetch(`http://${localip}:5001/fetchEmp`, {
-      method: "GET",
-    })
+    setRefreshing(true)
+    fetch(`http://${localip}:5001/fetchEmp`, { method: "GET" })
       .then((res) => res.json())
       .then((employees) => {
-        setEmployees(employees.data);
-        setFilteredEmployees(employees.data); // Set both lists on fetch
+        setEmployees(employees.data)
+        setFilteredEmployees(employees.data)
       })
       .catch((error) => {
-        console.error("Error fetching Emp Data: ", error);
+        console.error("Error fetching Emp Data: ", error)
       })
-      .finally(() => setRefreshing(false));
-  };
+      .finally(() => setRefreshing(false))
+  }
 
   useEffect(() => {
-    fetchEmp();
-  }, []);
+    fetchEmp()
+  }, [])
 
   const onRefresh = () => {
-    setRefreshing(true);
-    fetchEmp(); // Call fetchEmp with parentheses
-  };
+    setRefreshing(true)
+    fetchEmp()
+  }
 
   const handleSearch = (text) => {
-    setSearchTerm(text);
+    setSearchTerm(text)
     if (text) {
       const filtered = employees.filter((employee) =>
         employee.emp_name.toLowerCase().includes(text.toLowerCase())
-      );
-      setFilteredEmployees(filtered);
+      )
+      setFilteredEmployees(filtered)
     } else {
-      setFilteredEmployees(employees);
+      setFilteredEmployees(employees)
+    }
+  }
+
+  const handleEdit = (employee) => {
+    setSelectedEmployee(employee);
+    setEmpName(employee.emp_name);
+    setEmpAge(employee.emp_age.toString());
+    setEmpPhone(employee.emp_phone.toString());
+    setEmpAddress(employee.emp_address);
+    setEmpSalary(employee.emp_salary.toString());
+    setShowEditModal(true);
+  };
+  
+  const handleSaveEdit = async () => {
+    const updatedEmployee = {
+      emp_name: empName,
+      emp_age: parseInt(empAge),
+      emp_phone: parseInt(empPhone),
+      emp_address: empAddress,
+      emp_salary: parseFloat(empSalary),
+    };
+  
+    try {
+      const response = await fetch(`http://${localip}:5001/editEmp`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ empId: selectedEmployee._id, updatedData: updatedEmployee }),
+      });
+  
+      if (response.ok) {
+        setEmployees((prevEmployees) =>
+          prevEmployees.map((emp) =>
+            emp._id === selectedEmployee._id ? { ...emp, ...updatedEmployee } : emp
+          )
+        );
+        setShowEditModal(false);
+      } else {
+        console.error("Error updating employee in database");
+      }
+    } catch (error) {
+      console.error("Error updating employee:", error);
     }
   };
+  
+
+  const handleDelete = async (empId) => {
+    try {
+      const response = await fetch(`http://${localip}:5001/deleteEmp`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ empId: empId }),
+      })
+
+      if (response.ok) {
+        // Filter out the deleted employee from the local state
+        setEmployees(employees.filter((employee) => employee._id !== empId))
+      } else {
+        console.error("Error deleting employee from database")
+      }
+    } catch (error) {
+      console.error("Error deleting employee:", error)
+    }
+  }
 
   const renderEmployeeItem = ({ item }) => (
-    <View style={styles.employeeItem}>
-      <Text style={styles.employeeName}>{item.emp_name}</Text>
+    <View style={employee.employeeItem}>
+      <Text style={employee.employeeName}>{item.emp_name}</Text>
       <Text>Age: {item.emp_age}</Text>
       <Text>Phone: {item.emp_phone}</Text>
       <Text>Address: {item.emp_address}</Text>
       <Text>Salary: ${item.emp_salary}</Text>
+      <View style={employee.buttonContainer}>
+        <TouchableOpacity onPress={() => handleEdit(item)} style={employee.editButton}>
+          <Text style={employee.buttonText}>Edit</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleDelete(item._id)} style={employee.deleteButton}>
+          <Text style={employee.buttonText}>Delete</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-  );
+  )
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <View style={employee.container}>
+      <View style={employee.header}>
         <TextInput
-          style={styles.searchBar}
+          style={employee.searchBar}
           placeholder="Search by name"
           value={searchTerm}
           onChangeText={handleSearch}
         />
-        <Link href="/screen/addEmp" style={styles.addButton}>
-          <Text style={styles.addButtonText}>Add Employee</Text>
+        <Link href="/screen/addEmp" style={employee.addButton}>
+          <Text style={employee.addButtonText}>Add Employee</Text>
         </Link>
       </View>
 
       <FlatList
         data={filteredEmployees}
         renderItem={renderEmployeeItem}
-        keyExtractor={(item) => item._id} // Adjusted keyExtractor
-        contentContainerStyle={styles.listContainer}
-        ListEmptyComponent={<Text style={styles.emptyText}>No employees found.</Text>}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
+        keyExtractor={(item) => item._id}
+        contentContainerStyle={employee.listContainer}
+        ListEmptyComponent={<Text style={employee.emptyText}>No employees found.</Text>}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       />
+
+      <Modal visible={showEditModal} animationType="slide" onRequestClose={() => setShowEditModal(false)}>
+        <View style={employee.modalContainer}>
+          <Text style={employee.modalTitle}>Edit Employee</Text>
+          <TextInput 
+            style={employee.input} 
+            value={empName} 
+            onChangeText={setEmpName} 
+            placeholder="Name" 
+          />
+          <TextInput 
+            style={employee.input} 
+            value={empAge} 
+            onChangeText={setEmpAge} 
+            placeholder="Age" 
+            keyboardType="numeric" 
+          />
+          <TextInput style={employee.input} value={empPhone} onChangeText={setEmpPhone} placeholder="Phone" />
+          <TextInput style={employee.input} value={empAddress} onChangeText={setEmpAddress} placeholder="Address" />
+          <TextInput style={employee.input} value={empSalary} onChangeText={setEmpSalary} placeholder="Salary" keyboardType="numeric" />
+          <Button title="Save" onPress={handleSaveEdit} />
+          <Button title="Cancel" onPress={() => setShowEditModal(false)} />
+        </View>
+      </Modal>
     </View>
-  );
-};
+  )
+}
 
-export default EmployeeList;
+export default Employee
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    backgroundColor: "#F8F8F8",
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginVertical: 15,
-  },
-  searchBar: {
-    flex: 1,
-    backgroundColor: "#fff",
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 10,
-    borderColor: "#E5E5EA",
-    borderWidth: 1,
-    marginRight: 10,
-  },
-  addButton: {
-    backgroundColor: "#34C759",
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 10,
-  },
-  addButtonText: {
-    color: "#fff",
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  listContainer: {
-    paddingBottom: 20,
-  },
-  employeeItem: {
-    backgroundColor: "#fff",
-    padding: 15,
-    marginVertical: 8,
-    borderRadius: 10,
-    borderColor: "#E5E5EA",
-    borderWidth: 1,
-  },
-  employeeName: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 5,
-  },
-  emptyText: {
-    textAlign: "center",
-    color: "#aaa",
-    fontSize: 16,
-    marginTop: 20,
-  },
-});

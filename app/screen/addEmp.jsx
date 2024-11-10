@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { employee } from '../style/employee'
+import { addEmpStyles } from '../style/addEmpStyle'
 
-const validationEmployee = Yup.object().shape({
+const validationaddEmpStyles = Yup.object().shape({
   emp_name: Yup.string().max(100, 'Name is too long').required('Name is required'),
   emp_age: Yup.string().required('Age is required').max(2, 'Age should be realistic'),
   emp_phone: Yup.string()
@@ -18,7 +18,7 @@ const addEmp = () => {
   const [empDetails, setEmpDetails] = useState("");
   const localip = process.env.EXPO_PUBLIC_LOCAL_IP;
 
-  const handleAddEmployee = async (values) => {
+  const handleAddaddEmpStyles = async (values) => {
     try {
       const response = await fetch(`http://${localip}:5001/addEmp`, {
         method: 'POST',
@@ -37,9 +37,9 @@ const addEmp = () => {
       const result = await response.json();
 
       if (response.ok) {
-        alert("Employee added successfully!");
+        alert("addEmpStyles added successfully!");
       } else {
-        alert(result.message || "Error adding employee.");
+        alert(result.message || "Error adding addEmpStyles.");
       }
     } catch (error) {
       alert("Error: " + error.message);
@@ -47,11 +47,11 @@ const addEmp = () => {
   };
 
   return (
-    <View style={employee.container}>
+    <View style={addEmpStyles.container}>
       <Formik
         initialValues={{ emp_name: "", emp_age: "", emp_phone: "", emp_address: "", emp_salary: "" }}
-        onSubmit={(values) => handleAddEmployee(values)}
-        validationSchema={validationEmployee}
+        onSubmit={(values) => handleAddaddEmpStyles(values)}
+        validationSchema={validationaddEmpStyles}
       >
         {({
           handleChange,
@@ -62,76 +62,76 @@ const addEmp = () => {
           touched,
         }) => (
           <>
-            <View style={employee.section}>
-              <Text style={employee.label}>Name</Text>
+            <View style={addEmpStyles.section}>
+              <Text style={addEmpStyles.label}>Name</Text>
               <TextInput
-                style={employee.input}
+                style={addEmpStyles.input}
                 onChangeText={handleChange('emp_name')}
                 onBlur={handleBlur('emp_name')}
                 value={values.emp_name}
               />
               {touched.emp_name && errors.emp_name && (
-                <Text style={employee.errorText}>{errors.emp_name}</Text>
+                <Text style={addEmpStyles.errorText}>{errors.emp_name}</Text>
               )}
             </View>
 
-            <View style={employee.section}>
-              <Text style={employee.label}>Age</Text>
+            <View style={addEmpStyles.section}>
+              <Text style={addEmpStyles.label}>Age</Text>
               <TextInput
-                style={employee.input}
+                style={addEmpStyles.input}
                 keyboardType="numeric"
                 onChangeText={handleChange('emp_age')}
                 onBlur={handleBlur('emp_age')}
                 value={values.emp_age}
               />
               {touched.emp_age && errors.emp_age && (
-                <Text style={employee.errorText}>{errors.emp_age}</Text>
+                <Text style={addEmpStyles.errorText}>{errors.emp_age}</Text>
               )}
             </View>
 
-            <View style={employee.section}>
-              <Text style={employee.label}>Phone</Text>
+            <View style={addEmpStyles.section}>
+              <Text style={addEmpStyles.label}>Phone</Text>
               <TextInput
-                style={employee.input}
+                style={addEmpStyles.input}
                 keyboardType="phone-pad"
                 onChangeText={handleChange('emp_phone')}
                 onBlur={handleBlur('emp_phone')}
                 value={values.emp_phone}
               />
               {touched.emp_phone && errors.emp_phone && (
-                <Text style={employee.errorText}>{errors.emp_phone}</Text>
+                <Text style={addEmpStyles.errorText}>{errors.emp_phone}</Text>
               )}
             </View>
 
-            <View style={employee.section}>
-              <Text style={employee.label}>Address</Text>
+            <View style={addEmpStyles.section}>
+              <Text style={addEmpStyles.label}>Address</Text>
               <TextInput
-                style={employee.input}
+                style={addEmpStyles.input}
                 onChangeText={handleChange('emp_address')}
                 onBlur={handleBlur('emp_address')}
                 value={values.emp_address}
               />
               {touched.emp_address && errors.emp_address && (
-                <Text style={employee.errorText}>{errors.emp_address}</Text>
+                <Text style={addEmpStyles.errorText}>{errors.emp_address}</Text>
               )}
             </View>
 
-            <View style={employee.section}>
-              <Text style={employee.label}>Salary</Text>
+            <View style={addEmpStyles.section}>
+              <Text style={addEmpStyles.label}>Salary</Text>
               <TextInput
-                style={employee.input}
+                style={addEmpStyles.input}
                 keyboardType="numeric"
                 onChangeText={handleChange('emp_salary')}
                 onBlur={handleBlur('emp_salary')}
                 value={values.emp_salary}
               />
               {touched.emp_salary && errors.emp_salary && (
-                <Text style={employee.errorText}>{errors.emp_salary}</Text>
+                <Text style={addEmpStyles.errorText}>{errors.emp_salary}</Text>
               )}
             </View>
 
-            <TouchableOpacity onPress={handleSubmit} style={employee.button}>
-              <Text style={employee.buttonText}>CONFIRM</Text>
+            <TouchableOpacity onPress={handleSubmit} style={addEmpStyles.button}>
+              <Text style={addEmpStyles.buttonText}>CONFIRM</Text>
             </TouchableOpacity>
           </>
         )}

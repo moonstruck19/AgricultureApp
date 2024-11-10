@@ -132,8 +132,8 @@ export const tabHome = StyleSheet.create({
   modalContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    padding: 20,
+    backgroundColor: "#fff"
   },
   modalContent: {
     width: "90%",
@@ -147,21 +147,23 @@ export const tabHome = StyleSheet.create({
     elevation: 5,
   },
   modalTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 10,
-  },
-  modalText: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 10,
+    fontSize: 20,
+    marginBottom: 20,
+    fontWeight: "bold"
   },
   dropdownLabel: {
     fontSize: 16,
     fontWeight: "500",
     color: "#333",
     marginBottom: 8,
+  },
+  input: {
+    backgroundColor: "#F8F8F8",
+    padding: 10,
+    marginVertical: 5,
+    borderRadius: 5,
+    borderColor: "#E5E5EA",
+    borderWidth: 1
   },
   picker: {
     height: 50,
@@ -220,4 +222,8 @@ export const tabHome = StyleSheet.create({
   deleteButton: {
     backgroundColor: "#ff3b30", // Red for delete
   },
+
+  modalButtons: {
+    backgroundColor: "005C43"
+  }
 });

@@ -99,7 +99,7 @@ const TabHome = () => {
   
     try {
       const response = await fetch(`http://${localip}:5001/editTask`, {
-        method: "PUT",  // Use PUT instead of POST
+        method: "PUT", 
         headers: {
           "Content-Type": "application/json",
         },
@@ -127,8 +127,6 @@ const TabHome = () => {
     }
   }
   
-  
-
   const handleDelete = async (taskId) => {
     try {
       await fetch(`http://${localip}:5001/deleteTask`, {
@@ -278,7 +276,7 @@ const TabHome = () => {
       )}
 
       {/* Edit Modal */}
-      <Modal visible={showEditModal} animationType="slide" onRequestClose={() => setShowEditModal(false)}>
+      <Modal visible={showEditModal} animationType="fade" onRequestClose={() => setShowEditModal(false)}>
         <View style={tabHome.modalContainer}>
           <Text style={tabHome.modalTitle}>Edit Task</Text>
           <Text style={tabHome.modalLabel}>Task Name</Text>
@@ -303,9 +301,10 @@ const TabHome = () => {
         <View style={tabHome.modalContainer}>
           <Text style={tabHome.modalTitle}>Change Task Status</Text>
           <View style={tabHome.modalButtons}>
-            <Button title="Completed" onPress={() => handleStatusChange("yes")} />
-            <Button title="In Progress" onPress={() => handleStatusChange("no")} />
+            <Button style={tabHome.modalButtons} title="Completed" onPress={() => handleStatusChange("yes")} />
+            <Button style={tabHome.modalButtons} title="In Progress" onPress={() => handleStatusChange("no")} />
           </View>
+          <Button title="Cancel" onPress={() => setShowEditModal(false)} />
         </View>
       </Modal>
     </View>
