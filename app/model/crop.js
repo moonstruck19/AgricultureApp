@@ -6,5 +6,5 @@ const cropSchema = new mongoose.Schema ({
     crop_details: {type: String, maxLength: 100},
 }, {
     collection: "cropManagerment"
-});
+})
 mongoose.model("cropManagerment", cropSchema)

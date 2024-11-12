@@ -10,6 +10,7 @@ import Setting from './setting';
 import Weather from './weather';
 import MyFarm from './myFarm';
 import Signin from '../auth/signin';
+import Finance from './finance'
 
 const Drawer = createDrawerNavigator();
 
@@ -78,6 +79,13 @@ export default function RootLayout() {
             component={Employee}
             options={{
               drawerIcon: (config) => <MaterialCommunityIcons name="account-outline" size={24} color="black" />,
+            }}
+          />
+          <Drawer.Screen
+            name="Finance"
+            component={Finance}
+            options={{
+              drawerIcon: (config) => <MaterialCommunityIcons name="wallet-outline" size={24} color="black" />,
             }}
           />
           <Drawer.Screen

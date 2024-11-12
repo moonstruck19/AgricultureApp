@@ -9,6 +9,7 @@ require('../app/model/task')
 require('../app/model/employee') 
 require('../app/model/crop')
 require('../app/model/animal')
+require('../app/model/revenue')
 
 // Middleware
 app.use(cors())
@@ -29,6 +30,7 @@ const Task = mongoose.model("taskManagerment")
 const Emp = mongoose.model("empManagerment")
 const Crop = mongoose.model("cropManagerment")
 const Animal = mongoose.model("animalManagerment")
+const Revenue = mongoose.model("revenueMana")
 
 // Root route
 app.get("/", (req, res) => {
@@ -350,6 +352,28 @@ app.put('/editEmp', async (req, res) => {
     res.status(500).json({ message: "Internal server error", error: error.message });
   }
 });
+
+//================================FINANCE MANAGERMENT===================================//
+app.post('/addRevenue', async (req, res) => {
+    const { re_date, re_type, re_price } = req.body
+
+    try { 
+        await Revenue.create({
+            re_date: re_date,
+            re_type: re_type,
+            re_price: re_price
+        })
+        res.status(201).send({
+            status: "ok",
+            message: "Revenue record write successfully"
+        })
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            message: error.message,
+        })
+    }
+})
 
 
 // Start server
