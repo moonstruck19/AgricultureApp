@@ -273,6 +273,10 @@ app.get('/fetchAnimal', async(req, res) => {
     }
 })
 
+app.post('/updateAnimal', async(req, res) => {
+    
+})
+
 //================================EMPLOYEE MANAGERMENT===================================//
 
 app.post('/addEmp', async(req, res) => {
@@ -372,6 +376,18 @@ app.post('/addRevenue', async (req, res) => {
             status: "error",
             message: error.message,
         })
+    }
+})
+
+app.get('/fetchRevenue', async (req, res) => {
+    try {
+        const data = await Revenue.find({})
+        res.send({
+            status: "ok",
+            data: data
+        })
+    } catch (error) {
+        console.log(error)
     }
 })
 
