@@ -273,10 +273,68 @@ app.get('/fetchAnimal', async(req, res) => {
     }
 })
 
-app.post('/updateAnimal', async(req, res) => {
-    
+app.post("/updateAnimal", async (req, res) => {
+    const { _id, newQuantity } = req.body 
+  
+    try {
+      const result = await Animal.updateOne(
+        { _id: new mongoose.Types.ObjectId(_id) },
+        { $set: { animal_quantity: newQuantity } }
+      )
+  
+      if (result.modifiedCount === 1) {
+        res.status(200).json({ message: "Animal quantity updated successfully" })
+      } else {
+        res.status(404).json({ message: "Animal not found" })
+      }
+    } catch (error) {
+      console.error("Error updating animal quantity: ", error)
+      res.status(500).json({ message: "Internal server error" })
+    }
 })
 
+app.delete('/deleteAnimal', async (req, res) => {
+    const { animalId } = req.body
+  
+    try {
+      const animal = await Animal.findByIdAndDelete(animalId) 
+  
+      if (animal) {
+        res.status(200).json({ message: "Animal deleted successfully" })
+      } else {
+        res.status(404).json({ message: "Animal not found" })
+      }
+    } catch (error) {
+      console.error("Error deleting Animal:", error)
+      res.status(500).json({ message: "Internal server error" })
+    }
+})  
+
+app.put('/editAnimal', async (req, res) => {
+  const { animalId, updatedData } = req.body
+
+  if (!animalId || !updatedData) {
+    return res.status(400).json({ message: "Invalid request. Missing animalId or updatedData" })
+  }
+
+  try {
+    const animal = await Animal.findByIdAndUpdate(
+        animalId,
+      { $set: updatedData },
+      { new: true }
+    )
+
+    if (animal) {
+      res.status(200).json({ message: "Animal updated successfully", emp })
+    } else {
+      res.status(404).json({ message: "Animal not found" })
+    }
+  } catch (error) {
+    console.error("Error updating Animal:", error)
+    res.status(500).json({ message: "Internal server error", error: error.message })
+  }
+})
+  
 //================================EMPLOYEE MANAGERMENT===================================//
 
 app.post('/addEmp', async(req, res) => {
@@ -333,10 +391,10 @@ app.delete('/deleteEmp', async (req, res) => {
 })  
 
 app.put('/editEmp', async (req, res) => {
-  const { empId, updatedData } = req.body;
+  const { empId, updatedData } = req.body
 
   if (!empId || !updatedData) {
-    return res.status(400).json({ message: "Invalid request. Missing empId or updatedData" });
+    return res.status(400).json({ message: "Invalid request. Missing empId or updatedData" })
   }
 
   try {
@@ -344,18 +402,18 @@ app.put('/editEmp', async (req, res) => {
       empId,
       { $set: updatedData },
       { new: true }
-    );
+    )
 
     if (emp) {
-      res.status(200).json({ message: "Employee updated successfully", emp });
+      res.status(200).json({ message: "Employee updated successfully", emp })
     } else {
-      res.status(404).json({ message: "Employee not found" });
+      res.status(404).json({ message: "Employee not found" })
     }
   } catch (error) {
-    console.error("Error updating employee:", error);
-    res.status(500).json({ message: "Internal server error", error: error.message });
+    console.error("Error updating employee:", error)
+    res.status(500).json({ message: "Internal server error", error: error.message })
   }
-});
+})
 
 //================================FINANCE MANAGERMENT===================================//
 app.post('/addRevenue', async (req, res) => {

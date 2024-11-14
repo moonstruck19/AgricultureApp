@@ -1,31 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, FlatList, RefreshControl } from 'react-native';
-import { Link } from "expo-router";
-import { myFarm } from '../style/myFarm'
+import React, { useState, useEffect } from 'react'
+import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { NavigationContainer } from '@react-navigation/native'
+import { Ionicons } from "@expo/vector-icons"
+import { Link } from 'expo-router'
 
+const localip = process.env.EXPO_PUBLIC_LOCAL_IP
 
-const MyFarm = () => {
-    const [activeTab, setActiveTab] = useState('Crops');
-    const [dataCrop, setDataCrop] = useState([]);
-    const [dataAnimal, setDataAnimal] = useState([]);
-    const [refreshing, setRefreshing] = useState(false);
-
-    const localip = process.env.EXPO_PUBLIC_LOCAL_IP
-
-
-    const fetchCrop = () => {
-        fetch(`http://${localip}:5001/fetchCrop`, {
-            method: "GET",
-        })
-            .then((res) => res.json())
-            .then((dataCrop) => {
-                setDataCrop(dataCrop.data)
-            })
-            .catch((error) => {
-                console.error("Error fetching crops data: ", error)
-            })
-            .finally(() => setRefreshing(false))
-    }
+const Animal = () => {
+    const [dataAnimal, setDataAnimal] = useState([])
 
     const fetchAnimal = () => {
         fetch(`http://${localip}:5001/fetchAnimal`, {
@@ -38,74 +21,136 @@ const MyFarm = () => {
             .catch((error) => {
                 console.error("Error fetching animals data: ", error)
             })
-            .finally(() => setRefreshing(false))
-    };
+    }
 
     useEffect(() => {
-        fetchCrop()
         fetchAnimal()
     }, [])
 
-    const onRefresh = () => {
-        setRefreshing(true)
-        fetchCrop()
-        fetchAnimal()
+    return (
+        <ScrollView contentContainerStyle={styles.screen}>
+            <Link href="../screen/addAnimal" style={styles.addIcon}>
+                <Ionicons name="add" size={24} color="black" />
+            </Link>
+            <Text style={styles.title}>Animal Entries</Text>
+            {dataAnimal.length > 0 ? (
+                dataAnimal.map((data, index) => (
+                    <View key={index} style={styles.card}>
+                        <Text>Name: {data.animal_name}</Text>
+                        <Text>Details: {data.animal_details}</Text>
+                        <Text>Quantity: {data.animal_quantity}</Text>
+                        <Text>Date: {new Date(data.animal_date).toLocaleString()}</Text>
+                    </View>
+                ))
+            ) : (
+                <Text>No animal entries available.</Text>
+            )}
+        </ScrollView>
+    )
+}
+
+const Crop = () => {
+    const [dataCrop, setDataCrop] = useState([])
+
+    const fetchCrop = () => {
+        fetch(`http://${localip}:5001/fetchCrop`, {
+            method: "GET",
+        })
+            .then((res) => res.json())
+            .then((dataCrop) => {
+                setDataCrop(dataCrop.data)
+            })
+            .catch((error) => {
+                console.error("Error fetching crop data: ", error)
+            })
     }
 
-    const renderCard = ({ item }) => (
-        <View style={myFarm.card}>
-            <View style={myFarm.cardContent}>
-                {activeTab === 'Crops' ? (
-                    <>
-                        <Text style={myFarm.cardTitle}>{item.crop_name}</Text>
-                        <Text style={myFarm.cardDescription}>{item.crop_details}</Text>
-                        <Text style={myFarm.cardDate}>{item.crop_date}</Text>
-                    </>
-                ) : (
-                    <>
-                        <Text style={myFarm.cardTitle}>{item.animal_name}</Text>
-                        <Text style={myFarm.cardDescription}>{item.animal_details}</Text>
-                        <Text style={myFarm.cardQuantity}>Quantity: {item.animal_quantity}</Text>
-                        <Text style={myFarm.cardDate}>{item.animal_date}</Text>
-                    </>
-                )}
-                <TouchableOpacity>
-                    <Text style={myFarm.detailsButton}>View Details</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
-    );
-
-    const buttonText = activeTab === 'Crops' ? 'Add Crop' : 'Add Animal';
-    const buttonPath = activeTab === 'Crops' ? '/screen/addCrop' : '/screen/addAnimal';
+    useEffect(() => {
+        fetchCrop()
+    }, [])
 
     return (
-        <View style={myFarm.container}>
-            <View style={myFarm.tabContainer}>
-                <TouchableOpacity onPress={() => setActiveTab('Crops')} style={[myFarm.tab, activeTab === 'Crops' && myFarm.activeTab]}>
-                    <Text style={activeTab === 'Crops' ? myFarm.activeTabText : myFarm.tabText}>Crops</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setActiveTab('Animals')} style={[myFarm.tab, activeTab === 'Animals' && myFarm.activeTab]}>
-                    <Text style={activeTab === 'Animals' ? myFarm.activeTabText : myFarm.tabText}>Animals</Text>
-                </TouchableOpacity>
-            </View>
-            <Link href={buttonPath} style={myFarm.option}>
-                <Text style={myFarm.optionText}>{buttonText}</Text>
+        <ScrollView contentContainerStyle={styles.screen}>
+            <Link href="../screen/addCrop" style={styles.addIcon}>
+                <Ionicons name="add" size={24} color="black" />
             </Link>
-            <FlatList
-                data={activeTab === 'Crops' ? dataCrop : dataAnimal}
-                renderItem={renderCard}
-                keyExtractor={(item) => item._id}
-                contentContainerStyle={myFarm.cardList}
-                showsVerticalScrollIndicator={false}
-                refreshControl={
-                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                }
-            />
-        </View>
-    );
-};
+            <Text style={styles.title}>Crop Entries</Text>
+            {dataCrop.length > 0 ? (
+                dataCrop.map((data, index) => (
+                    <View key={index} style={styles.card}>
+                        <Text>Name: {data.crop_name}</Text>
+                        <Text>Details: {data.crop_details}</Text>
+                        <Text>Date: {new Date(data.crop_date).toLocaleString()}</Text>
+                    </View>
+                ))
+            ) : (
+                <Text>No crop entries available.</Text>
+            )}
+        </ScrollView>
+    )
+}
 
-export default MyFarm;
+const Tab = createBottomTabNavigator()
 
+const MyFarm = () => {
+    return (
+        <NavigationContainer independent={true}>
+            <Tab.Navigator
+                screenOptions={{
+                    tabBarActiveTintColor: '#00A86B',
+                    tabBarInactiveTintColor: '#7D7D7D',
+                    tabBarStyle: {
+                        backgroundColor: '#F8F8F8',
+                        borderTopWidth: 0,
+                        elevation: 5,
+                    },
+                    headerStyle: {
+                        backgroundColor: '#00A86B',
+                    },
+                    headerTintColor: '#fff',
+                    headerTitleAlign: 'center',
+                    tabBarLabelStyle: {
+                        fontSize: 12,
+                    },
+                }}
+            >
+                <Tab.Screen name="Animal" component={Animal} />
+                <Tab.Screen name="Crop" component={Crop} />
+            </Tab.Navigator>
+        </NavigationContainer>
+    )
+}
 
+export default MyFarm
+
+const styles = StyleSheet.create({
+    screen: {
+        paddingTop: 20,
+        alignItems: 'center',
+        backgroundColor: '#F0F4F8',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 10,
+    },
+    addIcon: {
+        position: 'absolute',
+        top: 10,
+        right: 20,
+        padding: 10,
+    },
+    card: {
+        backgroundColor: '#FFF',
+        padding: 15,
+        borderRadius: 8,
+        marginVertical: 10,
+        width: '90%',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 2,
+    },
+})
