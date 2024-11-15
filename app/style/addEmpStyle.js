@@ -5,23 +5,23 @@ export const addEmpStyles = StyleSheet.create({
         paddingTop: 10,
         flex: 1,
         paddingHorizontal: 20,
-        backgroundColor: "#F8F8F8",
+        backgroundColor: "#fff",
     },
     section: {
         marginBottom: 20,
     },
     label: {
-        fontSize: 14, // Slightly larger for readability
+        fontSize: 14, 
         fontWeight: "500",
         marginBottom: 8,
     },
     input: {
         backgroundColor: "#fff",
         borderRadius: 15,
-        paddingVertical: 18, // Increased padding for taller input
+        paddingVertical: 18, 
         paddingHorizontal: 15,
         fontSize: 16,
-        height: 55, // Set a minimum height for the input field
+        height: 55,
         borderWidth: 1,
         borderColor: "#E5E5EA",
     },
@@ -29,7 +29,7 @@ export const addEmpStyles = StyleSheet.create({
         width: "100%",
         paddingVertical: 18, // Increased padding for a larger button
         borderRadius: 10,
-        backgroundColor: "#34C759",
+        backgroundColor: "#0a593c",
         alignItems: "center",
     },
     buttonText: {

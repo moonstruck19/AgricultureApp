@@ -47,6 +47,50 @@ const RootLayout = () => {
                     }
                 }}
             />
+            <Stack.Screen 
+                name="screen/addCrop" 
+                options={{
+                    headerShown: true,
+                    title: 'New Crop',
+                    headerBackTitle: 'Back',
+                    headerBackTitleStyle: {
+                        fontSize: 16
+                    }
+                }}
+            />            
+            <Stack.Screen 
+                name="screen/addAnimal" 
+                options={{
+                    headerShown: true,
+                    title: 'New Animal',
+                    headerBackTitle: 'Back',
+                    headerBackTitleStyle: {
+                        fontSize: 16
+                    }
+                }}
+            />
+            <Stack.Screen 
+                name="screen/addEmp" 
+                options={{
+                    headerShown: true,
+                    title: 'New Employee',
+                    headerBackTitle: 'Back',
+                    headerBackTitleStyle: {
+                        fontSize: 16
+                    }
+                }}
+            />
+            <Stack.Screen 
+                name="screen/addRevenue" 
+                options={{
+                    headerShown: true,
+                    title: 'New Revenue',
+                    headerBackTitle: 'Back',
+                    headerBackTitleStyle: {
+                        fontSize: 16
+                    }
+                }}
+            />
         </Stack>
     );
 }

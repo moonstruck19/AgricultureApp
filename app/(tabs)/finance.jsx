@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
 import { Ionicons } from "@expo/vector-icons"
 import { Link } from 'expo-router'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 const localip = process.env.EXPO_PUBLIC_LOCAL_IP
 
@@ -29,6 +30,7 @@ const Revenue = () => {
 
   return (
     <View style={styles.screen}>
+      <Text>Revenue Entries</Text>
       <Link href="../screen/addRevenue">
         <Ionicons name="add" size={24} color="black" />
       </Link>
@@ -66,15 +68,15 @@ const Finance = () => {
     <NavigationContainer independent={true}>
       <Tab.Navigator
         screenOptions={{
-          tabBarActiveTintColor: '#00A86B', // Green tint for active tab
-          tabBarInactiveTintColor: '#7D7D7D', // Gray tint for inactive tab
+          tabBarActiveTintColor: '#00A86B', 
+          tabBarInactiveTintColor: '#7D7D7D', 
           tabBarStyle: {
-            backgroundColor: '#F8F8F8', // Light background color
+            backgroundColor: '#fff', 
             borderTopWidth: 0,
             elevation: 5,
           },
           headerStyle: {
-            backgroundColor: '#00A86B', // Dark green header
+            backgroundColor: '#0a593c', // Dark green header
           },
           headerTintColor: '#fff',
           headerTitleAlign: 'center',
@@ -83,9 +85,33 @@ const Finance = () => {
           },
         }}
       >
-        <Tab.Screen name="Revenue" component={Revenue} />
-        <Tab.Screen name="Expense" component={Expense} />
-        <Tab.Screen name="Statistical" component={Statistical} />
+        <Tab.Screen 
+          name="Revenue" 
+          component={Revenue}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons name="attach-money" size={24} color="black" />
+            ),
+          }} 
+        />
+        <Tab.Screen 
+          name="Expense" 
+          component={Expense}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons name="attach-money" size={24} color="black" />
+            ),
+          }}  
+        />
+        <Tab.Screen 
+          name="Statistical" 
+          component={Statistical}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons name="attach-money" size={24} color="black" />
+            ),
+          }}  
+        />
       </Tab.Navigator>
     </NavigationContainer>
   )
@@ -98,7 +124,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F0F4F8', // Light background for each screen
+    backgroundColor: '#fff', // Light background for each screen
   },
   title: {
     fontSize: 24,

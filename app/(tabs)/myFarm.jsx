@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
 import { Ionicons } from "@expo/vector-icons"
 import { Link } from 'expo-router'
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 const localip = process.env.EXPO_PUBLIC_LOCAL_IP
 
@@ -100,12 +101,12 @@ const MyFarm = () => {
                     tabBarActiveTintColor: '#00A86B',
                     tabBarInactiveTintColor: '#7D7D7D',
                     tabBarStyle: {
-                        backgroundColor: '#F8F8F8',
+                        backgroundColor: '#fff',
                         borderTopWidth: 0,
                         elevation: 5,
                     },
                     headerStyle: {
-                        backgroundColor: '#00A86B',
+                        backgroundColor: '#0a593c',
                     },
                     headerTintColor: '#fff',
                     headerTitleAlign: 'center',
@@ -114,8 +115,24 @@ const MyFarm = () => {
                     },
                 }}
             >
-                <Tab.Screen name="Animal" component={Animal} />
-                <Tab.Screen name="Crop" component={Crop} />
+                <Tab.Screen 
+                    name="Animal" 
+                    component={Animal}
+                    options={{
+                        tabBarIcon: ({ color, size }) => (
+                            <MaterialCommunityIcons name="cow" size={24} color="black" />
+                        ),
+                    }} 
+                />
+                <Tab.Screen 
+                    name="Crop" 
+                    component={Crop} 
+                    options={{
+                        tabBarIcon: ({ color, size }) => (
+                            <MaterialCommunityIcons name="grass" size={24} color="black" />
+                        ),
+                    }} 
+                />
             </Tab.Navigator>
         </NavigationContainer>
     )
@@ -127,7 +144,7 @@ const styles = StyleSheet.create({
     screen: {
         paddingTop: 20,
         alignItems: 'center',
-        backgroundColor: '#F0F4F8',
+        backgroundColor: '#fff',
     },
     title: {
         fontSize: 24,

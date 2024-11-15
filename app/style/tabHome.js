@@ -5,7 +5,7 @@ export const tabHome = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 10,
     paddingVertical: 10,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#fff",
   },
   header: {
     flexDirection: "row",
@@ -62,7 +62,7 @@ export const tabHome = StyleSheet.create({
   tabButtonActive: {
     paddingVertical: 8,
     paddingHorizontal: 20,
-    backgroundColor: "#6a4bff",
+    backgroundColor: "#0a593c",
     borderRadius: 20,
   },
   tabText: {

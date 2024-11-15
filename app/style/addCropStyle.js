@@ -5,7 +5,7 @@ export const addCropStyles = StyleSheet.create({
       paddingTop: 10,
       flex: 1,
       paddingHorizontal: 20,
-      backgroundColor: "#fff8f0", // Soft off-white for a clean look
+      backgroundColor: "#fff", 
     },
     section: {
       marginBottom: 25,
@@ -13,11 +13,11 @@ export const addCropStyles = StyleSheet.create({
     label: {
       fontSize: 14,
       fontWeight: "600",
-      color: "#3A3A3C", // Darker, muted grey for text
+      color: "#3A3A3C",
       marginBottom: 6,
     },
     textArea: {
-      backgroundColor: "#fff8f0",
+      backgroundColor: "#fff",
       borderRadius: 12,
       padding: 15,
       height: 90,
@@ -33,7 +33,7 @@ export const addCropStyles = StyleSheet.create({
       marginTop: 5,
     },
     input: {
-      backgroundColor: "#fff8f0",
+      backgroundColor: "#fff",
       borderRadius: 12,
       padding: 15,
       fontSize: 16,
@@ -66,7 +66,7 @@ export const addCropStyles = StyleSheet.create({
       marginTop: 5,
     },
     dateButton: {
-      backgroundColor: "#fff8f0",
+      backgroundColor: "#fff",
       borderRadius: 12,
       padding: 15,
       borderWidth: 1,

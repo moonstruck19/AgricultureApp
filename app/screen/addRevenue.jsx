@@ -72,7 +72,7 @@ const Revenue = () => {
     price: Yup.number()
       .typeError('Price must be a number')
       .min(0, 'Price must be a positive number')
-      .required('Please enter price per unit'),
+      .required('Please enter price'),
   })
 
   const handleAddRevenue = async (values, { resetForm }) => {
@@ -202,9 +202,9 @@ const Revenue = () => {
               <Text style={styles.errorText}>{errors.quantity}</Text>
             )}
 
-            <Text style={styles.label}>Price per Unit</Text>
+            <Text style={styles.label}>Price</Text>
             <TextInput
-              placeholder="Enter price per unit"
+              placeholder="Enter price"
               value={values.price.toString()}
               onChangeText={handleChange('price')}
               onBlur={handleBlur('price')}
@@ -215,12 +215,12 @@ const Revenue = () => {
               <Text style={styles.errorText}>{errors.price}</Text>
             )}
 
-            <Button title="Add Revenue" onPress={handleSubmit} color="#00A86B" />
+            <Button title="Add Revenue" onPress={handleSubmit} color="#0a593c" />
           </View>
         )}
       </Formik>
 
-      <View style={styles.revenueContainer}>
+      {/* <View style={styles.revenueContainer}>
         <Text style={styles.subtitle}>Revenue Entries</Text>
         {dataRevenue.length > 0 ? (
           dataRevenue.map((data, index) => (
@@ -233,7 +233,7 @@ const Revenue = () => {
         ) : (
           <Text>No revenue entries available.</Text>
         )}
-      </View>
+      </View> */}
     </View>
   )
 }

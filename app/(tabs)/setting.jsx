@@ -1,6 +1,6 @@
-import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
+import React from "react"
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native"
+import Icon from "react-native-vector-icons/FontAwesome"
 
 const Settings = () => {
   return (
@@ -28,16 +28,16 @@ const Settings = () => {
         </TouchableOpacity>
       </View>
     </View>
-  );
-};
+  )
+}
 
-export default Settings;
+export default Settings
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#fff",
   },
   header: {
     fontSize: 32,
@@ -68,4 +68,4 @@ const styles = StyleSheet.create({
   optionIcon: {
     marginLeft: "auto",
   },
-});
+})

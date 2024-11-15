@@ -4,7 +4,7 @@ export const employee = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: "#F8F8F8"
+    backgroundColor: "#fff"
   },
   header: {
     flexDirection: "row",
@@ -23,7 +23,7 @@ export const employee = StyleSheet.create({
     marginRight: 10
   },
   addButton: {
-    backgroundColor: "#34C759",
+    backgroundColor: "#0a593c",
     paddingVertical: 10,
     paddingHorizontal: 15
   },
@@ -42,7 +42,7 @@ export const employee = StyleSheet.create({
     marginTop: 10
   },
   editButton: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#0a593c",
     padding: 5,
     borderRadius: 5
   },
@@ -78,4 +78,7 @@ export const employee = StyleSheet.create({
     color: "#aaa",
     marginTop: 20
   },
+  addButtonText: {
+    color: "#fff"
+  }
 });

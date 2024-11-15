@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#f5f5f5',
     padding: 20,
   },
   title: {
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     fontFamily: 'System',
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#0a593c',
     paddingVertical: 14,
     paddingHorizontal: 90,
     borderRadius: 12,

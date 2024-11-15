@@ -1,13 +1,11 @@
-import {
-  StyleSheet
-} from "react-native";
+import { StyleSheet } from "react-native";
 
 export const addTask = StyleSheet.create({
   container: {
     paddingTop: 10,
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: "#F8F8F8",
+    backgroundColor: "#fff",
   },
   section: {
     marginBottom: 20,
@@ -18,6 +16,8 @@ export const addTask = StyleSheet.create({
     marginBottom: 8,
   },
   textArea: {
+    borderColor: "#E5E5EA",
+    borderWidth: 1,
     backgroundColor: "#fff",
     borderRadius: 15,
     padding: 15,
@@ -31,7 +31,7 @@ export const addTask = StyleSheet.create({
     marginTop: 5,
   },
   input: {
-    backgroundColor: "#fff8f0",
+    backgroundColor: "#fff",
     borderRadius: 12,
     padding: 15,
     borderWidth: 1,
@@ -59,7 +59,7 @@ export const addTask = StyleSheet.create({
     width: "100%",
     paddingVertical: 15,
     borderRadius: 10,
-    backgroundColor: "#7f00ff",
+    backgroundColor: "#0a593c",
     alignItems: "center",
   },
   buttonText: {

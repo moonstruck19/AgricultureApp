@@ -91,9 +91,9 @@ const AddAnimal = () => {
             <View style={addAnimalStyle.section}>
               <Text style={addAnimalStyle.label}>Date</Text>
               <View style={addAnimalStyle.inline}>
-                <TouchableOpacity onPress={() => setShowPicker(false)} style={addAnimalStyle.dateButton}>
+                <TouchableOpacity onPress={() => setShowPicker(true)} style={addAnimalStyle.dateButton}>
                   <TextInput
-                    // style={addTask.input}
+                    // style={addAnimalStyle.input}
                     value={today}
                     editable={false}
                   />

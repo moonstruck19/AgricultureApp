@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#f5f5f5',
     padding: 20,
   },
   title: {
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     fontFamily: 'System',
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#0a593c',
     paddingVertical: 15,
     paddingHorizontal: 90,
     borderRadius: 12,
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     color: '#1C1C1E',
   },
   signupLink: {
-    color: '#007AFF',
+    color: '#0a593c',
     fontWeight: '600',
   },
   errorText: {

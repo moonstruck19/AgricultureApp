@@ -231,7 +231,7 @@ const TabHome = () => {
     <View style={tabHome.container}>
       <View style={tabHome.header}>
         <View>
-          <Text style={tabHome.greeting}>Good morning!</Text>
+          <Text style={tabHome.greeting}>Halo!</Text>
           <Text style={tabHome.date}>{new Date().toLocaleDateString()}</Text>
         </View>
         <Link href="/screen/addTask">
