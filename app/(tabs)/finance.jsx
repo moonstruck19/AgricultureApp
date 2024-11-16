@@ -1,27 +1,99 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, RefreshControl, Modal, TextInput, Button, TouchableOpacity } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
 import { Ionicons } from "@expo/vector-icons"
 import { Link } from 'expo-router'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 
 const localip = process.env.EXPO_PUBLIC_LOCAL_IP
 
 const Revenue = () => {
+  const [refreshing, setRefreshing] = useState(false)
   const [dataRevenue, setDataRevenue] = useState([])
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [selectedRevenue, setSelectedRevenue] = useState(null)
+  const [reType, setReType] = useState("")
+  const [reQuantity, setReQuantity] = useState("")
+  const [rePrice, setRePrice] = useState("")
 
-  const fetchRevenue = () => {
-    fetch(`http://${localip}:5001/fetchRevenue`, {
-      method: "GET"
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setDataRevenue(data.data)
+  const fetchRevenue = async () => {
+    try {
+      const response = await fetch(`http://${localip}:5001/fetchRevenue`, {
+        method: "GET",
       })
-      .catch((error) => {
-        console.log("Error fetching revenue data: ", error)
+      const data = await response.json()
+      if (response.ok) {
+        setDataRevenue(data.data || [])
+      } else {
+        console.error("Error fetching revenue data:", data.message)
+      }
+    } catch (error) {
+      console.error("Error fetching revenue data:", error)
+    }
+  }
+
+  const handleRefresh = async () => {
+    setRefreshing(true)
+    await fetchRevenue()
+    setRefreshing(false)
+  }
+
+  const handleEdit = (revenue) => {
+    setSelectedRevenue(revenue)
+    setReType(revenue.re_type)
+    setReQuantity(revenue.re_quantity)
+    setRePrice(revenue.re_price)
+    setShowEditModal(true)
+  }
+
+  const handleSaveEdit = async () => {
+    const updatedRevenue = {
+      re_type: reType,
+      re_quantity: reQuantity,
+      re_price: rePrice,
+    }
+
+    try {
+      const response = await fetch(`http://${localip}:5001/editRevenue`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ revenueId: selectedRevenue._id, updatedData: updatedRevenue }),
       })
+
+      if (response.ok) {
+        setDataRevenue((prevData) =>
+          prevData.map((revenue) =>
+            revenue._id === selectedRevenue._id ? { ...revenue, ...updatedRevenue } : revenue
+          )
+        )
+        setShowEditModal(false)
+      } else {
+        console.error("Error updating revenue in database")
+      }
+    } catch (error) {
+      console.error("Error updating revenue:", error)
+    }
+  }
+
+  const handleDelete = async (revenueId) => {
+    try {
+      const response = await fetch(`http://${localip}:5001/deleteRevenue`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ revenueId: revenueId }),
+      })
+
+      if (response.ok) {
+        setDataRevenue(dataRevenue.filter((revenue) => revenue._id !== revenueId))
+      } else {
+        console.error("Error deleting revenue from database")
+      }
+    } catch (error) {
+      console.error("Error deleting revenue:", error)
+    }
   }
 
   useEffect(() => {
@@ -29,8 +101,14 @@ const Revenue = () => {
   }, [])
 
   return (
-    <View style={styles.screen}>
-      <Text>Revenue Entries</Text>
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={styles.contentContainer}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+      }
+    >
+      <Text style={styles.title}>Revenue Entries</Text>
       <Link href="../screen/addRevenue">
         <Ionicons name="add" size={24} color="black" />
       </Link>
@@ -39,21 +117,225 @@ const Revenue = () => {
           <View key={index} style={styles.card}>
             <Text>Date: {new Date(data.re_date).toLocaleString()}</Text>
             <Text>Type: {data.re_type}</Text>
+            <Text>Quantity: {data.re_quantity}</Text>
             <Text>Revenue: ${data.re_price}</Text>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.editButton}
+                onPress={() => handleEdit(data)}
+              >
+                <Text style={styles.buttonText}>Edit</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.deleteButton}
+                onPress={() => handleDelete(data._id)}
+              >
+                <Text style={styles.buttonText}>Delete</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         ))
       ) : (
-        <Text>No revenue entries available.</Text>
+        <Text style={styles.noData}>No revenue entries available.</Text>
       )}
-    </View>
+
+      <Modal visible={showEditModal} animationType="slide">
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalTitle}>Edit Revenue</Text>
+          <TextInput
+            style={styles.input}
+            value={reType}
+            onChangeText={setReType}
+            placeholder="Type"
+          />
+          <TextInput
+            style={styles.input}
+            value={reQuantity}
+            onChangeText={setReQuantity}
+            placeholder="Quantity"
+            keyboardType="numeric"
+          />
+          <TextInput
+            style={styles.input}
+            value={rePrice}
+            onChangeText={setRePrice}
+            placeholder="Price"
+            keyboardType="numeric"
+          />
+          <Button title="Save" onPress={handleSaveEdit} />
+          <Button title="Cancel" onPress={() => setShowEditModal(false)} />
+        </View>
+      </Modal>
+    </ScrollView>
   )
 }
 
-const Expense = () => (
-  <View style={styles.screen}>
-    <Text style={styles.content}>Expense Data: $4,000</Text>
-  </View>
-)
+
+const Expense = () => {
+  const [dataExpense, setDataExpense] = useState([])
+  const [refreshing, setRefreshing] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [selectedExpense, setSelectedExpense] = useState(null)
+  const [exType, setExType] = useState("")
+  const [exQuantity, setExQuantity] = useState("")
+  const [exPrice, setExPrice] = useState("")
+
+  const fetchExpense = async () => {
+    try {
+      const response = await fetch(`http://${localip}:5001/fetchExpense`, {
+        method: "GET",
+      })
+      const data = await response.json()
+      if (response.ok) {
+        setDataExpense(data.data || [])
+      } else {
+        console.error("Error fetching expenses:", data.message)
+      }
+    } catch (error) {
+      console.error("Error fetching Expense data:", error)
+    }
+  }
+
+  const handleRefresh = async () => {
+    setRefreshing(true)
+    await fetchExpense()
+    setRefreshing(false)
+  }
+
+  const handleEdit = (expense) => {
+    setSelectedExpense(expense)
+    setExType(expense.ex_type)
+    setExQuantity(expense.ex_quantity)
+    setExPrice(expense.ex_price)
+    setShowEditModal(true)
+  }
+
+  const handleSaveEdit = async () => {
+    const updatedExpense = {
+      ex_type: exType,
+      ex_quantity: parseInt(exQuantity),
+      ex_price: parseFloat(exPrice),
+    }
+
+    try {
+      const response = await fetch(`http://${localip}:5001/editExpense`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          expenseId: selectedExpense._id, 
+          updatedData: updatedExpense 
+        }),
+      })
+
+      if (response.ok) {
+        setDataExpense((prevData) =>
+          prevData.map((expense) =>
+            expense._id === selectedExpense._id ? { ...expense, ...updatedExpense } : expense
+          )
+        )
+        setShowEditModal(false)
+      } else {
+        console.error("Error updating expense in database")
+      }
+    } catch (error) {
+      console.error("Error updating expense:", error)
+    }
+  }
+
+  const handleDelete = async (exId) => {
+    try {
+      const response = await fetch(`http://${localip}:5001/deleteExpense`, {
+        method: "DELETE",
+        headers: { 
+          "Content-Type": "application/json" 
+        },
+        body: JSON.stringify({ expenseId: exId }),
+      })
+
+      if (response.ok) {
+        setDataExpense(dataExpense.filter((expense) => expense._id !== exId))
+      } else {
+        console.error("Error deleting expense from database")
+      }
+    } catch (error) {
+      console.error("Error deleting expense:", error)
+    }
+  }
+
+  useEffect(() => {
+    fetchExpense()
+  }, [])
+
+  return (
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={styles.contentContainer}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+      }
+    >
+      <Text style={styles.title}>Expense Entries</Text>
+      <Link href="../screen/addExpense">
+        <Ionicons name="add" size={24} color="black" />
+      </Link>
+      {dataExpense.length > 0 ? (
+        dataExpense.map((data, index) => (
+          <View key={index} style={styles.card}>
+            <Text>Date: {new Date(data.ex_date).toLocaleString()}</Text>
+            <Text>Type: {data.ex_type}</Text>
+            <Text>Quantity: {data.ex_quantity}</Text>
+            <Text>Expense: ${data.ex_price}</Text>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.editButton}
+                onPress={() => handleEdit(data)}
+              >
+                <Text style={styles.buttonText}>Edit</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.deleteButton}
+                onPress={() => handleDelete(data._id)}
+              >
+                <Text style={styles.buttonText}>Delete</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ))
+      ) : (
+        <Text style={styles.noData}>No expense entries available.</Text>
+      )}
+
+      <Modal visible={showEditModal} animationType="slide">
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalTitle}>Edit Expense</Text>
+          <TextInput
+            style={styles.input}
+            value={exType}
+            onChangeText={setExType}
+            placeholder="Type"
+          />
+          <TextInput
+            style={styles.input}
+            value={exQuantity}
+            onChangeText={setExQuantity}
+            placeholder="Quantity"
+            keyboardType="numeric"
+          />
+          <TextInput
+            style={styles.input}
+            value={exPrice}
+            onChangeText={setExPrice}
+            placeholder="Price"
+            keyboardType="numeric"
+          />
+          <Button title="Save" onPress={handleSaveEdit} />
+          <Button title="Cancel" onPress={() => setShowEditModal(false)} />
+        </View>
+      </Modal>
+    </ScrollView>
+  )
+}
+
 
 const Statistical = () => (
   <View style={styles.screen}>
@@ -122,9 +404,7 @@ export default Finance
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff', // Light background for each screen
+    backgroundColor: '#fff',
   },
   title: {
     fontSize: 24,
@@ -142,6 +422,17 @@ const styles = StyleSheet.create({
     color: '#333',
     marginTop: 20,
   },
+  contentContainer: {
+    alignItems: 'center',
+    padding: 10,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
   card: {
     backgroundColor: '#FFF',
     padding: 15,
@@ -153,5 +444,67 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 2,
+  },
+  noData: {
+    fontSize: 16,
+    color: '#888',
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Adds a semi-transparent background
+    padding: 20,
+  },
+  modalContent: {
+    width: "90%",
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5, // For Android shadow
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 15,
+    width: "100%",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
+  },
+  button: {
+    flex: 1,
+    marginHorizontal: 5,
+    paddingVertical: 10,
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  saveButton: {
+    backgroundColor: "#4CAF50", // Green color for Save
+  },
+  cancelButton: {
+    backgroundColor: "#f44336", // Red color for Cancel
+  },
+  buttonText: {
+    color: "#4caf50",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 })

@@ -12,7 +12,6 @@ const Revenue = () => {
   const [error, setError] = useState(null) // For error handling
   const localip = process.env.EXPO_PUBLIC_LOCAL_IP 
 
-  
   const [dataRevenue, setDataRevenue] = useState([])
   
   const fetchRevenue = () => {
@@ -100,6 +99,7 @@ const Revenue = () => {
           body: JSON.stringify({
             re_date: new Date().toISOString(),
             re_type: selectedItemName, 
+            re_quantity: values.quantity,
             re_price: values.price,
           }),
         });
