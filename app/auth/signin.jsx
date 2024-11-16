@@ -22,7 +22,7 @@ const Signin = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Welcome Back</Text>
       <Formik
-        initialValues={{ email: "test3@gmail.com", password: "111111" }}
+        initialValues={{ email: "test3@gmail.com", password: "123456" }}
         onSubmit={async (values) => {
           try {
             const response = await fetch(`http://${localip}:5001/login`, {

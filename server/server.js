@@ -10,12 +10,13 @@ require('../app/model/employee')
 require('../app/model/crop')
 require('../app/model/animal')
 require('../app/model/revenue')
+require('../app/model/expense')
+require('../app/model/type')
 
 // Middleware
 app.use(cors())
 app.use(bodyParser.json())
 
-// MongoDB connection
 const mongoUrl = 'mongodb+srv://lamborghininguyn:G0V7J1wZXC5wDfXi@cluster0.7uvb1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 
 mongoose.connect(mongoUrl).then(() => {
@@ -24,13 +25,14 @@ mongoose.connect(mongoUrl).then(() => {
     console.log(e)
 })
 
-// Define the User model
 const User = mongoose.model("userInfo")
 const Task = mongoose.model("taskManagerment")
 const Emp = mongoose.model("empManagerment")
 const Crop = mongoose.model("cropManagerment")
 const Animal = mongoose.model("animalManagerment")
 const Revenue = mongoose.model("revenueMana")
+const Expense = mongoose.model("expenseMana")
+const Type = mongoose.model("typeManagerment")
 
 // Root route
 app.get("/", (req, res) => {
@@ -99,6 +101,46 @@ app.post('/login', async (req, res) => {
         })
     }
 })
+
+app.post('/changePass', async (req, res) => {
+    const { user_email, old_password, new_password } = req.body
+
+    try {
+        const user = await User.findOne({ user_email })
+
+        if (!user) {
+            return res.status(404).send({
+                status: "error",
+                message: "User not found!",
+            })
+        }
+
+        const isOldPasswordValid = await bcrypt.compare(old_password, user.user_password)
+
+        if (!isOldPasswordValid) {
+            return res.status(400).send({
+                status: "error",
+                message: "Old password is incorrect!",
+            })
+        }
+
+        const encryptedNewPassword = await bcrypt.hash(new_password, 5)
+
+        user.user_password = encryptedNewPassword
+        await user.save()
+
+        res.status(200).send({
+            status: "ok",
+            message: "Password updated successfully!",
+        })
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            message: error.message,
+        })
+    }
+})
+
 
 //================================TASK MANAGERMENT===================================//
 
@@ -417,12 +459,13 @@ app.put('/editEmp', async (req, res) => {
 
 //================================FINANCE MANAGERMENT===================================//
 app.post('/addRevenue', async (req, res) => {
-    const { re_date, re_type, re_price } = req.body
+    const { re_date, re_type, re_quantity, re_price } = req.body
 
     try { 
         await Revenue.create({
             re_date: re_date,
             re_type: re_type,
+            re_quantity: re_quantity,
             re_price: re_price
         })
         res.status(201).send({
@@ -449,6 +492,135 @@ app.get('/fetchRevenue', async (req, res) => {
     }
 })
 
+app.delete('/deleteRevenue', async (req, res) => {
+    const { revenueId } = req.body
+
+    try {
+        const revenue = await Revenue.findByIdAndDelete(revenueId)
+
+        if (revenue) {
+            res.status(200).json({ message: "Revenue deleted successfully" })
+        } else {
+            res.status(404).json({ message: "Revenue not found" })
+        }
+    } catch (error) {
+        console.error("Error deleting Revenue: ", error)
+        res.status(500).json({ message: "Internal server error" })
+    }
+})
+
+app.put('/editRevenue', async (req, res) => {
+    const { revenueId, updatedData } = req.body
+  
+    if (!revenueId || !updatedData) {
+      return res.status(400).json({ message: "Invalid request. Missing revenueId or updatedData" })
+    }
+  
+    try {
+      const revenue = await Revenue.findByIdAndUpdate(
+        revenueId,
+        { $set: updatedData },
+        { new: true }
+      )
+  
+      if (revenue) {
+        res.status(200).json({ message: "Revenue updated successfully", revenue })
+      } else {
+        res.status(404).json({ message: "Revenue not found" })
+      }
+    } catch (error) {
+      console.error("Error updating Revenue:", error)
+      res.status(500).json({ message: "Internal server error", error: error.message })
+    }
+})
+
+app.post('/addExpense', async (req, res) => {
+    const { ex_date, ex_type, ex_quantity, ex_price } = req.body
+
+    try { 
+        await Expense.create({
+            ex_date: ex_date,
+            ex_type: ex_type,
+            ex_quantity: ex_quantity,
+            ex_price: ex_price
+        })
+        res.status(201).send({
+            status: "ok",
+            message: "Expense record write successfully"
+        })
+    } catch (error) {
+        res.status(500).send({
+            status: "error",
+            message: error.message,
+        })
+    }
+})
+
+app.get('/fetchExpense', async (req, res) => {
+    try {
+        const data = await Expense.find({})
+        res.send({
+            status: "ok",
+            data: data
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+app.delete('/deleteExpense', async (req, res) => {
+    const { expenseId } = req.body
+
+    try {
+        const expense = await Expense.findByIdAndDelete(expenseId)
+
+        if (expense) {
+            res.status(200).json({ message: "Expense deleted successfully" })
+        } else {
+            res.status(404).json({ message: "Expense not found" })
+        }
+    } catch (error) {
+        console.error("Error deleting Expense: ", error)
+        res.status(500).json({ message: "Internal server error" })
+    }
+})
+
+app.put('/editExpense', async (req, res) => {
+    const { expenseId, updatedData } = req.body
+  
+    if (!expenseId || !updatedData) {
+      return res.status(400).json({ message: "Invalid request. Missing expenseId or updatedData" })
+    }
+  
+    try {
+      const expense = await Expense.findByIdAndUpdate(
+        expenseId,
+        { $set: updatedData },
+        { new: true }
+      )
+  
+      if (expense) {
+        res.status(200).json({ message: "Expense updated successfully", expense })
+      } else {
+        res.status(404).json({ message: "Expense not found" })
+      }
+    } catch (error) {
+      console.error("Error updating Expense:", error)
+      res.status(500).json({ message: "Internal server error", error: error.message })
+    }
+})
+
+app.get('/fetchType', async (req, res) => {
+    try {
+        const data = await Type.find({})
+        res.send({
+            status: "ok",
+            data: data
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 // Start server
 app.listen(5001, () => {
