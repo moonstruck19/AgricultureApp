@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons"
 import { Link } from "expo-router"
 import { PanGestureHandler, State } from "react-native-gesture-handler"
 import { tabHome } from "../style/tabHome"
+import { Alert } from "react-native"
 
 const TabHome = () => {
   const [tasks, setTasks] = useState([])
@@ -128,19 +129,28 @@ const TabHome = () => {
   }
   
   const handleDelete = async (taskId) => {
-    try {
-      await fetch(`http://${localip}:5001/deleteTask`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
+    Alert.alert("Confirm Delete", "Are you sure you want to delete this animal?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await fetch(`http://${localip}:5001/deleteTask`, {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ taskId: taskId }),
+            })
+      
+            setTasks(tasks.filter((task) => task._id !== taskId))
+          } catch (error) {
+            console.error("Error deleting task:", error)
+          }
         },
-        body: JSON.stringify({ taskId: taskId }),
-      })
-
-      setTasks(tasks.filter((task) => task._id !== taskId))
-    } catch (error) {
-      console.error("Error deleting task:", error)
-    }
+      },
+    ])
   }
 
   const renderTaskItem = ({ item }) => {
