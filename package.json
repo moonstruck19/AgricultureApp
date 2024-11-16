@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "server": "nodemon server/server.js",
-    "start": "expo start && node ./scripts/ipconfig.js",
+    "start": "node ./scripts/ipconfig.js && expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "set-ip": "node ./scripts/ipconfig.js",
@@ -25,6 +25,7 @@
     "@react-navigation/drawer": "^6.7.2",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
+    "aws-sdk": "^2.1692.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -63,7 +64,8 @@
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.10",
     "react-swipeable": "^7.0.2",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "expo-image-picker": "~15.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
