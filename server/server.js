@@ -245,13 +245,14 @@ app.put('/editTask', async (req, res) => {
 //================================CROP MANAGERMENT===================================//
 
 app.post('/addCrop', async(req, res) => {
-    const { crop_name, crop_date, crop_details } = req.body
+    const { crop_name, crop_date, crop_details, crop_image } = req.body
 
     try { 
         await Crop.create({
             crop_name: crop_name,
             crop_date: crop_date,
             crop_details: crop_details,
+            crop_image: crop_image,
         })
         res.status(201).send({
             status: "ok",
@@ -322,27 +323,28 @@ app.put('/editCrop', async (req, res) => {
 
 //================================ANIMAL MANAGERMENT===================================//
 
-app.post('/addAnimal', async(req, res) => {
-    const {animal_name, animal_date, animal_details, animal_quantity } = req.body
+app.post('/addAnimal', async (req, res) => {
+    const { animal_name, animal_date, animal_details, animal_quantity, animal_image } = req.body;
 
     try {
         await Animal.create({
             animal_name: animal_name,
-            animal_date: animal_date, 
+            animal_date: animal_date,
             animal_details: animal_details,
-            animal_quantity: animal_quantity
-        })
+            animal_quantity: animal_quantity,
+            animal_image: animal_image // Include the animal_image field
+        });
         res.status(201).send({
             status: "ok",
-            message: "Animal add successfully"
-        })
+            message: "Animal added successfully"
+        });
     } catch (error) {
         res.status(500).send({
             status: "error",
             message: error.message
-        })
+        });
     }
-})
+});
 
 app.get('/fetchAnimal', async(req, res) => {
     try {
@@ -662,6 +664,38 @@ app.get('/fetchType', async (req, res) => {
         console.log(error)
     }
 })
+
+app.get('/fetchReport', async (req, res) => {
+    try {
+      const totalRevenue = await mongoose.model('revenueMana').aggregate([
+        {
+          $group: {
+            _id: null,
+            total: { $sum: { $multiply: [{ $toDouble: "$re_quantity" }, { $toDouble: "$re_price" }] } }
+          }
+        }
+      ]);
+  
+      const totalExpense = await mongoose.model('expenseMana').aggregate([
+        {
+          $group: {
+            _id: null,
+            total: { $sum: { $multiply: [{ $toDouble: "$ex_quantity" }, { $toDouble: "$ex_price" }] } }
+          }
+        }
+      ]);
+  
+      const profit = (totalRevenue[0]?.total || 0) - (totalExpense[0]?.total || 0);
+  
+      res.status(200).json({
+        totalRevenue: totalRevenue[0]?.total || 0,
+        totalExpense: totalExpense[0]?.total || 0,
+        profit,
+      });
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching report data', error });
+    }
+  });
 
 // Start server
 app.listen(5001, () => {
