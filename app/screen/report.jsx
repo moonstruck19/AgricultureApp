@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, ScrollView } from 'react-native';
 import { Dimensions } from 'react-native';
+import { LineChart } from 'react-native-chart-kit';
 
 const localip = process.env.EXPO_PUBLIC_LOCAL_IP;
 const screenWidth = Dimensions.get('window').width;
@@ -60,12 +61,38 @@ const Report = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>Financial Report</Text>
       <Text style={styles.label}>Total Revenue: ${reportData.totalRevenue.toFixed(2)}</Text>
       <Text style={styles.label}>Total Expense: ${reportData.totalExpense.toFixed(2)}</Text>
       <Text style={styles.label}>Profit: ${reportData.profit.toFixed(2)}</Text>
-    </View>
+      <LineChart
+        data={chartData}
+        width={screenWidth - 40}
+        height={220}
+        chartConfig={{
+          backgroundColor: '#e26a00',
+          backgroundGradientFrom: '#fb8c00',
+          backgroundGradientTo: '#ffa726',
+          decimalPlaces: 2,
+          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          style: {
+            borderRadius: 16,
+          },
+          propsForDots: {
+            r: '6',
+            strokeWidth: '2',
+            stroke: '#ffa726',
+          },
+        }}
+        bezier
+        style={{
+          marginVertical: 8,
+          borderRadius: 16,
+        }}
+      />
+    </ScrollView>
   );
 };
 
