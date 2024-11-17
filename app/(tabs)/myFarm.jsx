@@ -238,6 +238,7 @@ const Crop = () => {
             {dataCrop.length > 0 ? (
                 dataCrop.map((crop, index) => (
                     <View key={index} style={styles.card}>
+                      <Image source={{ uri: crop.crop_image }} style={styles.cardImage} />
                         <View style={styles.cardContent}>
                             <Text style={styles.cardTitle}>{crop.crop_name}</Text>
                             <Text style={styles.cardText}>{crop.crop_details}</Text>

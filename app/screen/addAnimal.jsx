@@ -40,7 +40,7 @@ const AddAnimal = () => {
     });
 
     if (!result.canceled) {
-      console.log("Image picked:", result.uri); // Debugging log
+      console.log("Image picked:", result.assets[0].uri); // Debugging log
       setImage(result.assets[0].uri);
     } else {
       console.log("Image picking canceled"); // Debugging log
@@ -63,6 +63,7 @@ const AddAnimal = () => {
         Key: `animals/${Date.now()}.jpg`,
         Body: blob,
         ContentType: 'image/jpeg',
+        ACL: 'public-read',
       };
 
       return new Promise((resolve, reject) => {
