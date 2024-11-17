@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { Ionicons } from "@expo/vector-icons"
 import { Link } from 'expo-router'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { Alert } from 'react-native'
 
 const localip = process.env.EXPO_PUBLIC_LOCAL_IP
 
@@ -77,23 +78,32 @@ const Revenue = () => {
   }
 
   const handleDelete = async (revenueId) => {
-    try {
-      const response = await fetch(`http://${localip}:5001/deleteRevenue`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ revenueId: revenueId }),
-      })
+    Alert.alert("Confirm Delete", "Are you sure you want to delete this?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            const response = await fetch(`http://${localip}:5001/deleteRevenue`, {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ revenueId: revenueId }),
+            })
 
-      if (response.ok) {
-        setDataRevenue(dataRevenue.filter((revenue) => revenue._id !== revenueId))
-      } else {
-        console.error("Error deleting revenue from database")
-      }
-    } catch (error) {
-      console.error("Error deleting revenue:", error)
-    }
+            if (response.ok) {
+              setDataRevenue(dataRevenue.filter((revenue) => revenue._id !== revenueId))
+            } else {
+              console.error("Error deleting revenue from database")
+            }
+          } catch (error) {
+            console.error("Error deleting revenue:", error)
+          }
+        },
+      },
+    ])
   }
 
   useEffect(() => {
@@ -243,23 +253,32 @@ const Expense = () => {
   }
 
   const handleDelete = async (exId) => {
-    try {
-      const response = await fetch(`http://${localip}:5001/deleteExpense`, {
-        method: "DELETE",
-        headers: { 
-          "Content-Type": "application/json" 
-        },
-        body: JSON.stringify({ expenseId: exId }),
-      })
+    Alert.alert("Confirm Delete", "Are you sure you want to delete this animal?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            const response = await fetch(`http://${localip}:5001/deleteExpense`, {
+              method: "DELETE",
+              headers: { 
+                "Content-Type": "application/json" 
+              },
+              body: JSON.stringify({ expenseId: exId }),
+            })
 
-      if (response.ok) {
-        setDataExpense(dataExpense.filter((expense) => expense._id !== exId))
-      } else {
-        console.error("Error deleting expense from database")
-      }
-    } catch (error) {
-      console.error("Error deleting expense:", error)
-    }
+            if (response.ok) {
+              setDataExpense(dataExpense.filter((expense) => expense._id !== exId))
+            } else {
+              console.error("Error deleting expense from database")
+            }
+          } catch (error) {
+            console.error("Error deleting expense:", error)
+          }
+        },
+      },
+    ])
   }
 
   useEffect(() => {

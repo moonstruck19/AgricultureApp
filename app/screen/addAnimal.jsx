@@ -120,7 +120,7 @@ const AddAnimal = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <ScrollView contentContainerStyle={addAnimalStyle.scrollContainer}>
       <Formik
         initialValues={{ animal_name: "", animal_details: "", animal_quantity: "" }}
         onSubmit={(values) => handleAddAnimal(values)}
@@ -197,7 +197,7 @@ const AddAnimal = () => {
               )}
             </View>
             <Button title="Pick an image from camera roll" onPress={pickImage} />
-            {image && <Image source={{ uri: image }} style={styles.image} />}
+            {image && <Image source={{ uri: image }} style={addAnimalStyle.image} />}
             <TouchableOpacity onPress={handleSubmit} style={addAnimalStyle.button}>
                 <Text style={addAnimalStyle.buttonText}>CONFIRM</Text>
             </TouchableOpacity>
@@ -207,20 +207,5 @@ const AddAnimal = () => {
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    paddingBottom: 100, // Add padding to the bottom to ensure the button is visible
-  },
-  image: {
-    width: 200,
-    height: 200,
-    marginTop: 10,
-  },
-});
 
 export default AddAnimal;

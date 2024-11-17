@@ -278,6 +278,47 @@ app.get('/fetchCrop', async(req, res) => {
     }
 })
 
+app.delete('/deleteCrop', async (req, res) => {
+    const { cropId } = req.body
+  
+    try {
+      const crop = await Crop.findByIdAndDelete(cropId) 
+  
+      if (crop) {
+        res.status(200).json({ message: "Crop deleted successfully" })
+      } else {
+        res.status(404).json({ message: "Crop not found" })
+      }
+    } catch (error) {
+      console.error("Error deleting Crop:", error)
+      res.status(500).json({ message: "Internal server error" })
+    }
+})  
+
+app.put('/editCrop', async (req, res) => {
+  const { cropId, updatedData } = req.body
+
+  if (!cropId || !updatedData) {
+    return res.status(400).json({ message: "Invalid request. Missing cropId or updatedData" })
+  }
+
+  try {
+    const crop = await Crop.findByIdAndUpdate(
+        cropId,
+      { $set: updatedData },
+      { new: true }
+    )
+
+    if (crop) {
+      res.status(200).json({ message: "Crop updated successfully", crop })
+    } else {
+      res.status(404).json({ message: "Crop not found" })
+    }
+  } catch (error) {
+    console.error("Error updating Crop:", error)
+    res.status(500).json({ message: "Internal server error", error: error.message })
+  }
+})
 
 //================================ANIMAL MANAGERMENT===================================//
 
@@ -367,7 +408,7 @@ app.put('/editAnimal', async (req, res) => {
     )
 
     if (animal) {
-      res.status(200).json({ message: "Animal updated successfully", emp })
+      res.status(200).json({ message: "Animal updated successfully", animal })
     } else {
       res.status(404).json({ message: "Animal not found" })
     }

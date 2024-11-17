@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import { View, Text, TextInput, FlatList, RefreshControl, Modal, Button, TouchableOpacity } from "react-native"
 import { Link } from "expo-router"
 import { employee } from "../style/employee"
+import { Alert } from "react-native"
 
 const Employee = () => {
   const [employees, setEmployees] = useState([])
@@ -53,14 +54,14 @@ const Employee = () => {
   }
 
   const handleEdit = (employee) => {
-    setSelectedEmployee(employee);
-    setEmpName(employee.emp_name);
-    setEmpAge(employee.emp_age.toString());
-    setEmpPhone(employee.emp_phone.toString());
-    setEmpAddress(employee.emp_address);
-    setEmpSalary(employee.emp_salary.toString());
-    setShowEditModal(true);
-  };
+    setSelectedEmployee(employee)
+    setEmpName(employee.emp_name)
+    setEmpAge(employee.emp_age.toString())
+    setEmpPhone(employee.emp_phone.toString())
+    setEmpAddress(employee.emp_address)
+    setEmpSalary(employee.emp_salary.toString())
+    setShowEditModal(true)
+  }
   
   const handleSaveEdit = async () => {
     const updatedEmployee = {
@@ -69,50 +70,62 @@ const Employee = () => {
       emp_phone: parseInt(empPhone),
       emp_address: empAddress,
       emp_salary: parseFloat(empSalary),
-    };
+    }
   
     try {
       const response = await fetch(`http://${localip}:5001/editEmp`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ empId: selectedEmployee._id, updatedData: updatedEmployee }),
-      });
+        body: JSON.stringify({ 
+          empId: selectedEmployee._id, 
+          updatedData: updatedEmployee 
+        }),
+      })
   
       if (response.ok) {
         setEmployees((prevEmployees) =>
           prevEmployees.map((emp) =>
             emp._id === selectedEmployee._id ? { ...emp, ...updatedEmployee } : emp
           )
-        );
-        setShowEditModal(false);
+        )
+        setShowEditModal(false)
       } else {
-        console.error("Error updating employee in database");
+        console.error("Error updating employee in database")
       }
     } catch (error) {
-      console.error("Error updating employee:", error);
+      console.error("Error updating employee:", error)
     }
-  };
+  }
   
 
-  const handleDelete = async (empId) => {
-    try {
-      const response = await fetch(`http://${localip}:5001/deleteEmp`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
+  const handleDelete = async (empId) => {    
+    Alert.alert("Confirm Delete", "Are you sure you want to delete this animal?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            const response = await fetch(`http://${localip}:5001/deleteEmp`, {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ empId: empId }),
+            })
+      
+            if (response.ok) {
+              // Filter out the deleted employee from the local state
+              setEmployees(employees.filter((employee) => employee._id !== empId))
+            } else {
+              console.error("Error deleting employee from database")
+            }
+          } catch (error) {
+            console.error("Error deleting employee:", error)
+          }
         },
-        body: JSON.stringify({ empId: empId }),
-      })
-
-      if (response.ok) {
-        // Filter out the deleted employee from the local state
-        setEmployees(employees.filter((employee) => employee._id !== empId))
-      } else {
-        console.error("Error deleting employee from database")
-      }
-    } catch (error) {
-      console.error("Error deleting employee:", error)
-    }
+      },
+    ])
   }
 
   const renderEmployeeItem = ({ item }) => (
