@@ -129,7 +129,7 @@ const TabHome = () => {
   }
   
   const handleDelete = async (taskId) => {
-    Alert.alert("Confirm Delete", "Are you sure you want to delete this animal?", [
+    Alert.alert("Confirm Delete", "Are you sure you want to delete this?", [
       { text: "Cancel", style: "cancel" },
       {
         text: "Delete",
@@ -242,7 +242,7 @@ const TabHome = () => {
       <View style={tabHome.header}>
         <View>
           <Text style={tabHome.greeting}>Halo!</Text>
-          <Text style={tabHome.date}>{new Date().toLocaleDateString()}</Text>
+          <Text style={tabHome.date}>{new Date().toLocaleString()}</Text>
         </View>
         <Link href="/screen/addTask">
           <Ionicons name="add" size={24} color="black" />
