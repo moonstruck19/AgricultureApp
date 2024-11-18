@@ -378,4 +378,23 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 20,
     },
+    modalContainer: {
+      flex: 1,
+      justifyContent: "center",
+      padding: 20,
+      backgroundColor: "#fff"
+    },
+    modalTitle: {
+      fontSize: 20,
+      marginBottom: 20,
+      fontWeight: "bold"
+    },
+    input: {
+      backgroundColor: "#F8F8F8",
+      padding: 10,
+      marginVertical: 5,
+      borderRadius: 5,
+      borderColor: "#E5E5EA",
+      borderWidth: 1
+    },
 })
