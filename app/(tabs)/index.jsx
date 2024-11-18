@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react"
 import { Text, View, TouchableOpacity, FlatList, 
   ActivityIndicator, RefreshControl, Modal, Button, Animated, TextInput } from "react-native"
-import { Picker } from "@react-native-picker/picker"
 import { Ionicons } from "@expo/vector-icons"
 import { Link } from "expo-router"
 import { PanGestureHandler, State } from "react-native-gesture-handler"
@@ -17,6 +16,7 @@ const TabHome = () => {
   const [showEditModal, setShowEditModal] = useState(false)
   const [taskName, setTaskName] = useState("")
   const [taskDescription, setTaskDescription] = useState("")
+  const [filter, setFilter] = useState("All")
   const localip = process.env.EXPO_PUBLIC_LOCAL_IP
 
   const translateX = useRef({})
@@ -44,6 +44,9 @@ const TabHome = () => {
         setRefreshing(false)
       })
   }
+
+  const filteredTasks =
+    filter === "All" ? tasks : tasks.filter((task) => task.task_status === filter)
 
   useEffect(() => {
     fetchTask()
@@ -163,7 +166,6 @@ const TabHome = () => {
       if (nativeEvent.state === State.END) {
         const shouldShowButtons = nativeEvent.translationX < -50
 
-        // Animate the swipe and button opacity
         Animated.parallel([
           Animated.timing(translateX.current[item._id], {
             toValue: shouldShowButtons ? -100 : 0,
@@ -262,51 +264,68 @@ const TabHome = () => {
         </View>
       </View>
 
-      <View style={tabHome.tabsContainer}>
-        <TouchableOpacity style={tabHome.tabButtonActive}>
-          <Text style={tabHome.tabTextActive}>All tasks</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={tabHome.tabButton}>
-          <Text style={tabHome.tabText}>In progress</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={tabHome.tabButton}>
-          <Text style={tabHome.tabText}>Completed</Text>
-        </TouchableOpacity>
+      <View style={tabHome.container}>
+        <View style={tabHome.tabsContainer}>
+          <TouchableOpacity
+            style={filter === "All" ? tabHome.tabButtonActive : tabHome.tabButton}
+            onPress={() => setFilter("All")}
+          >
+            <Text style={filter === "All" ? tabHome.tabTextActive : tabHome.tabText}>
+              All tasks
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={filter === "In progress" ? tabHome.tabButtonActive : tabHome.tabButton}
+            onPress={() => setFilter("In progress")}
+          >
+            <Text style={filter === "In progress" ? tabHome.tabTextActive : tabHome.tabText}>
+              In progress
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={filter === "Completed" ? tabHome.tabButtonActive : tabHome.tabButton}
+            onPress={() => setFilter("Completed")}
+          >
+            <Text style={filter === "Completed" ? tabHome.tabTextActive : tabHome.tabText}>
+              Completed
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {loading ? (
+          <ActivityIndicator size="large" />
+        ) : (
+          <FlatList
+            data={filteredTasks}
+            keyExtractor={(item) => item._id}
+            renderItem={renderTaskItem}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          />
+        )}
       </View>
 
-      {loading ? (
-        <ActivityIndicator size="large" />
-      ) : (
-        <FlatList
-          data={tasks}
-          keyExtractor={(item) => item._id}
-          renderItem={renderTaskItem}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        />
-      )}
-
-      {/* Edit Modal */}
       <Modal visible={showEditModal} animationType="fade" onRequestClose={() => setShowEditModal(false)}>
         <View style={tabHome.modalContainer}>
           <Text style={tabHome.modalTitle}>Edit Task</Text>
-          <Text style={tabHome.modalLabel}>Task Name</Text>
-          <TextInput
-            style={tabHome.input}
-            value={taskName}
-            onChangeText={setTaskName}
-          />
-          <Text style={tabHome.modalLabel}>Task Description</Text>
-          <TextInput
-            style={tabHome.input}
-            value={taskDescription}
-            onChangeText={setTaskDescription}
-          />
+          <View style={tabHome.editContainer}>
+            <Text style={tabHome.modalLabel}>Task Name</Text>
+            <TextInput
+              style={tabHome.input}
+              value={taskName}
+              onChangeText={setTaskName}
+            />
+            <Text style={tabHome.modalLabel}>Task Description</Text>
+            <TextInput
+              style={tabHome.input}
+              value={taskDescription}
+              onChangeText={setTaskDescription}
+            />
+          </View>
           <Button title="Save" onPress={handleSaveEdit} />
           <Button title="Cancel" onPress={() => setShowEditModal(false)} />
         </View>
       </Modal>
 
-      {/* Modal for Status Change */}
       <Modal visible={showModal} animationType="fade" onRequestClose={() => setShowModal(false)}>
         <View style={tabHome.modalContainer}>
           <Text style={tabHome.modalTitle}>Change Task Status</Text>

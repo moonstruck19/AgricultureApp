@@ -7,6 +7,7 @@ import { Link } from 'expo-router';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Report from '../screen/report';
 
+
 const localip = process.env.EXPO_PUBLIC_LOCAL_IP;
 
 const Revenue = () => {
@@ -112,62 +113,67 @@ const Revenue = () => {
 
   return (
     <ScrollView
-      style={styles.screen}
-      contentContainerStyle={styles.contentContainer}
+      style={finance.screen}
+      contentContainerStyle={finance.contentContainer}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
       }
     >
-      <TouchableOpacity style={styles.fab}>
+      <TouchableOpacity style={finance.fab}>
         <Link href="../screen/addRevenue">
           <Ionicons name="add" size={24} color="white" />
         </Link>
       </TouchableOpacity>
       {dataRevenue.length > 0 ? (
         dataRevenue.map((data, index) => (
-          <View key={index} style={styles.card}>
+          <View key={index} style={finance.card}>
             <Text>Date: {new Date(data.re_date).toLocaleString()}</Text>
             <Text>Type: {data.re_type}</Text>
             <Text>Quantity: {data.re_quantity}</Text>
             <Text>Revenue: ${data.re_price}</Text>
-            <View style={styles.buttonContainer}>
+            <View style={finance.buttonContainer}>
               <TouchableOpacity
-                style={styles.editButton}
+                style={finance.editButton}
                 onPress={() => handleEdit(data)}
               >
-                <Text style={styles.buttonText}>Edit</Text>
+                <Text style={finance.buttonText}>Edit</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.deleteButton}
+                style={finance.deleteButton}
                 onPress={() => handleDelete(data._id)}
               >
-                <Text style={styles.buttonText}>Delete</Text>
+                <Text style={finance.buttonText}>Delete</Text>
               </TouchableOpacity>
             </View>
           </View>
         ))
       ) : (
-        <Text style={styles.noData}>No revenue entries available.</Text>
+        <Text style={finance.noData}>No revenue entries available.</Text>
       )}
 
       <Modal visible={showEditModal} animationType="slide">
-        <View style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>Edit Revenue</Text>
+        <View style={finance.modalContainer}>
+          <Text style={finance.modalTitle}>Edit Revenue</Text>
+          <Text>Type of Revenue</Text>
           <TextInput
-            style={styles.input}
+            style={finance.input}
             value={reType}
             onChangeText={setReType}
             placeholder="Type"
+            editable={false}
           />
+          <Text>Quantity</Text>
           <TextInput
-            style={styles.input}
+            style={finance.input}
             value={reQuantity}
             onChangeText={setReQuantity}
             placeholder="Quantity"
             keyboardType="numeric"
+            editable={false}
           />
+          <Text>Price</Text>
           <TextInput
-            style={styles.input}
+            style={finance.input}
             value={rePrice}
             onChangeText={setRePrice}
             placeholder="Price"
@@ -287,62 +293,68 @@ const Expense = () => {
 
   return (
     <ScrollView
-      style={styles.screen}
-      contentContainerStyle={styles.contentContainer}
+      style={finance.screen}
+      contentContainerStyle={finance.contentContainer}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
       }
     >
-      <TouchableOpacity style={styles.fab}>
+      <TouchableOpacity style={finance.fab}>
         <Link href="../screen/addExpense">
           <Ionicons name="add" size={24} color="white" />
         </Link>
       </TouchableOpacity>
       {dataExpense.length > 0 ? (
         dataExpense.map((data, index) => (
-          <View key={index} style={styles.card}>
+          <View key={index} style={finance.card}>
             <Text>Date: {new Date(data.ex_date).toLocaleString()}</Text>
             <Text>Type: {data.ex_type}</Text>
             <Text>Quantity: {data.ex_quantity}</Text>
             <Text>Expense: ${data.ex_price}</Text>
-            <View style={styles.buttonContainer}>
+            <View style={finance.buttonContainer}>
               <TouchableOpacity
-                style={styles.editButton}
+                style={finance.editButton}
                 onPress={() => handleEdit(data)}
               >
-                <Text style={styles.buttonText}>Edit</Text>
+                <Text style={finance.buttonText}>Edit</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.deleteButton}
+                style={finance.deleteButton}
                 onPress={() => handleDelete(data._id)}
               >
-                <Text style={styles.buttonText}>Delete</Text>
+                <Text style={finance.buttonText}>Delete</Text>
               </TouchableOpacity>
             </View>
           </View>
         ))
       ) : (
-        <Text style={styles.noData}>No expense entries available.</Text>
+        <Text style={finance.noData}>No expense entries available.</Text>
       )}
 
       <Modal visible={showEditModal} animationType="slide">
-        <View style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>Edit Expense</Text>
+        <View style={finance.modalContainer}>
+          <Text style={finance.modalTitle}>Edit Expense</Text>
+          <Text>Type of Expense</Text>
           <TextInput
-            style={styles.input}
+            style={finance.input}
             value={exType}
             onChangeText={setExType}
             placeholder="Type"
+            editable={false}
           />
+          <Text>Quantity</Text>
           <TextInput
-            style={styles.input}
+            style={finance.input}
             value={exQuantity}
             onChangeText={setExQuantity}
             placeholder="Quantity"
             keyboardType="numeric"
+            maxLength={4}
+            editable={false}
           />
+          <Text>Price</Text>
           <TextInput
-            style={styles.input}
+            style={finance.input}
             value={exPrice}
             onChangeText={setExPrice}
             placeholder="Price"
@@ -360,6 +372,7 @@ const Statistical = () => {
   const [reportData, setReportData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
 
   const fetchReport = async () => {
     try {
