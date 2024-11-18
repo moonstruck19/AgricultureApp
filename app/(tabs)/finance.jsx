@@ -118,10 +118,11 @@ const Revenue = () => {
         <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
       }
     >
-      <Text style={styles.title}>Revenue Entries</Text>
-      <Link href="../screen/addRevenue">
-        <Ionicons name="add" size={24} color="black" />
-      </Link>
+      <TouchableOpacity style={styles.fab}>
+        <Link href="../screen/addRevenue">
+          <Ionicons name="add" size={24} color="white" />
+        </Link>
+      </TouchableOpacity>
       {dataRevenue.length > 0 ? (
         dataRevenue.map((data, index) => (
           <View key={index} style={styles.card}>
@@ -292,10 +293,11 @@ const Expense = () => {
         <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
       }
     >
-      <Text style={styles.title}>Expense Entries</Text>
-      <Link href="../screen/addExpense">
-        <Ionicons name="add" size={24} color="black" />
-      </Link>
+      <TouchableOpacity style={styles.fab}>
+        <Link href="../screen/addExpense">
+          <Ionicons name="add" size={24} color="white" />
+        </Link>
+      </TouchableOpacity>
       {dataExpense.length > 0 ? (
         dataExpense.map((data, index) => (
           <View key={index} style={styles.card}>
@@ -467,16 +469,38 @@ const Finance = () => {
 export default Finance;
 
 const styles = StyleSheet.create({
+  // screen: {
+  //   flex: 1,
+  //   backgroundColor: '#fff',
+  // },
+  // title: {
+  //   fontSize: 24,
+  //   fontWeight: 'bold',
+  //   color: '#333',
+  //   marginBottom: 10,
+  // },
   screen: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#F9FAFB',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-  },
+  fab: {
+    position: 'absolute',
+    bottom: 20, // Position above the bottom of the screen
+    right: 20,  // Position to the right
+    backgroundColor: '#0A593C',
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 4, // Add shadow for Android
+    shadowColor: '#000', // Add shadow for iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    zIndex: 10,
+},
+
   content: {
     fontSize: 18,
     color: '#555',
@@ -544,18 +568,23 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 20,
+    marginTop: 10
   },
-  button: {
-    flex: 1,
-    marginHorizontal: 5,
-    paddingVertical: 10,
-    borderRadius: 5,
-    justifyContent: "center",
-    alignItems: "center",
+  editButton: {
+    backgroundColor: "#0a593c",
+    padding: 5,
+    borderRadius: 5
+  },
+  deleteButton: {
+    backgroundColor: "#FF3B30",
+    padding: 5,
+    borderRadius: 5
+  },
+  buttonText: {
+    color: "#fff"
   },
   saveButton: {
-    backgroundColor: "#4CAF50", // Green color for Save
+    backgroundColor: "#4CAF50",
   },
   cancelButton: {
     backgroundColor: "#f44336", // Red color for Cancel
