@@ -229,36 +229,37 @@ const Crop = () => {
     }, [])
 
     return (
-      <ScrollView contentContainerStyle={addAnimalStyle.screen}>
-        <TouchableOpacity style={addAnimalStyle.fab}>
-          <Link href="../screen/addCrop">
-              <Ionicons name="add" size={24} color="white" />
-          </Link>
-        </TouchableOpacity>
-        {dataCrop.length > 0 ? (
-          dataCrop.map((crop, index) => (
-            <View key={index} style={addAnimalStyle.card}>
-              <View style={addAnimalStyle.cardContent}>
-                <Text style={addAnimalStyle.cardTitle}>{crop.crop_name}</Text>
-                <Text style={addAnimalStyle.cardText}>{crop.crop_details}</Text>
-                <Text style={addAnimalStyle.cardDate}>{new Date(crop.crop_date).toLocaleDateString()}</Text>
-              </View>
-              <View style={addAnimalStyle.cardActions}>
-                <TouchableOpacity onPress={() => handleEdit(crop._id)} style={addAnimalStyle.actionButton}>
-                    <Ionicons name="create-outline" size={20} color="#4CAF50" />
-                    <Text style={addAnimalStyle.actionText}>Edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleDelete(crop._id)} style={addAnimalStyle.actionButton}>
-                    <Ionicons name="trash-outline" size={20} color="#F44336" />
-                    <Text style={addAnimalStyle.actionText}>Delete</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          ))
-        ) : (
-            <Text style={addAnimalStyle.noDataText}>No crop entries available.</Text>
-        )}
-      </ScrollView>
+        <ScrollView contentContainerStyle={styles.screen}>
+            <TouchableOpacity style={styles.fab}>
+                <Link href="../screen/addCrop">
+                    <Ionicons name="add" size={24} color="white" />
+                </Link>
+            </TouchableOpacity>
+            {dataCrop.length > 0 ? (
+                dataCrop.map((crop, index) => (
+                    <View key={index} style={styles.card}>
+                      <Image source={{ uri: crop.crop_image }} style={styles.cardImage} />
+                        <View style={styles.cardContent}>
+                            <Text style={styles.cardTitle}>{crop.crop_name}</Text>
+                            <Text style={styles.cardText}>{crop.crop_details}</Text>
+                            <Text style={styles.cardDate}>{new Date(crop.crop_date).toLocaleDateString()}</Text>
+                        </View>
+                        <View style={styles.cardActions}>
+                            <TouchableOpacity onPress={() => handleEdit(crop._id)} style={styles.actionButton}>
+                                <Ionicons name="create-outline" size={20} color="#4CAF50" />
+                                <Text style={styles.actionText}>Edit</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => handleDelete(crop._id)} style={styles.actionButton}>
+                                <Ionicons name="trash-outline" size={20} color="#F44336" />
+                                <Text style={styles.actionText}>Delete</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                ))
+            ) : (
+                <Text style={styles.noDataText}>No crop entries available.</Text>
+            )}
+        </ScrollView>
     )
 }
 
