@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity, Alert, TextInput, FlatList, RefreshControl, Modal, Button } from 'react-native'
+import { Text, View, ScrollView, Image, TouchableOpacity, Alert, TextInput, FlatList, RefreshControl, Modal, Button } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
 import { Ionicons } from "@expo/vector-icons"
@@ -119,53 +119,53 @@ const Animal = () => {
     }, [])
   
     return (
-      <ScrollView contentContainerStyle={styles.screen}>
-        <TouchableOpacity style={styles.fab}>
+      <ScrollView contentContainerStyle={addAnimalStyle.screen}>
+        <TouchableOpacity style={addAnimalStyle.fab}>
           <Link href="../screen/addAnimal">
             <Ionicons name="add" size={24} color="white" />
           </Link>
         </TouchableOpacity>
         {dataAnimal.length > 0 ? (
           dataAnimal.map((animal, index) => (
-            <View key={index} style={styles.card}>
-              <Image source={{ uri: animal.animal_image }} style={styles.cardImage} />
-              <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>{animal.animal_name}</Text>
-                <Text style={styles.cardText}>{animal.animal_details}</Text>
-                <Text style={styles.cardQuantity}>Quantity: {animal.animal_quantity}</Text>
+            <View key={index} style={addAnimalStyle.card}>
+              <Image source={{ uri: animal.animal_image }} style={addAnimalStyle.cardImage} />
+              <View style={addAnimalStyle.cardContent}>
+                <Text style={addAnimalStyle.cardTitle}>{animal.animal_name}</Text>
+                <Text style={addAnimalStyle.cardText}>{animal.animal_details}</Text>
+                <Text style={addAnimalStyle.cardQuantity}>Quantity: {animal.animal_quantity}</Text>
               </View>
-              <View style={styles.cardActions}>
-                <TouchableOpacity onPress={() => handleEdit(animal)} style={styles.actionButton}>
+              <View style={addAnimalStyle.cardActions}>
+                <TouchableOpacity onPress={() => handleEdit(animal)} style={addAnimalStyle.actionButton}>
                   <Ionicons name="create-outline" size={20} color="#4CAF50" />
-                  <Text style={styles.actionText}>Edit</Text>
+                  <Text style={addAnimalStyle.actionText}>Edit</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleDelete(animal._id)} style={styles.actionButton}>
+                <TouchableOpacity onPress={() => handleDelete(animal._id)} style={addAnimalStyle.actionButton}>
                   <Ionicons name="trash-outline" size={20} color="#F44336" />
-                  <Text style={styles.actionText}>Delete</Text>
+                  <Text style={addAnimalStyle.actionText}>Delete</Text>
                 </TouchableOpacity>
               </View>
             </View>
           ))
         ) : (
-          <Text style={styles.noDataText}>No animal entries available.</Text>
+          <Text style={addAnimalStyle.noDataText}>No animal entries available.</Text>
         )}
         <Modal visible={showEditModal} animationType="slide" onRequestClose={() => setShowEditModal(false)}>
-        <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Edit Animal</Text>
+        <View style={addAnimalStyle.modalContainer}>
+            <Text style={addAnimalStyle.modalTitle}>Edit Animal</Text>
             <TextInput 
-                style={styles.input} 
+                style={addAnimalStyle.input} 
                 value={aniName} 
                 onChangeText={setAniName} 
                 placeholder="Name" 
             />
             <TextInput 
-                style={styles.input} 
+                style={addAnimalStyle.input} 
                 value={aniDetails} 
                 onChangeText={setAniDetails} 
                 placeholder="Details" 
             />
             <TextInput
-                style={styles.input}
+                style={addAnimalStyle.input}
                 value={aniQuantity} 
                 onChangeText={setAniQuantity}
                 placeholder="Quantity"
@@ -229,36 +229,36 @@ const Crop = () => {
     }, [])
 
     return (
-        <ScrollView contentContainerStyle={styles.screen}>
-            <TouchableOpacity style={styles.fab}>
-                <Link href="../screen/addCrop">
-                    <Ionicons name="add" size={24} color="white" />
-                </Link>
-            </TouchableOpacity>
-            {dataCrop.length > 0 ? (
-                dataCrop.map((crop, index) => (
-                    <View key={index} style={styles.card}>
-                        <View style={styles.cardContent}>
-                            <Text style={styles.cardTitle}>{crop.crop_name}</Text>
-                            <Text style={styles.cardText}>{crop.crop_details}</Text>
-                            <Text style={styles.cardDate}>{new Date(crop.crop_date).toLocaleDateString()}</Text>
-                        </View>
-                        <View style={styles.cardActions}>
-                            <TouchableOpacity onPress={() => handleEdit(crop._id)} style={styles.actionButton}>
-                                <Ionicons name="create-outline" size={20} color="#4CAF50" />
-                                <Text style={styles.actionText}>Edit</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => handleDelete(crop._id)} style={styles.actionButton}>
-                                <Ionicons name="trash-outline" size={20} color="#F44336" />
-                                <Text style={styles.actionText}>Delete</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                ))
-            ) : (
-                <Text style={styles.noDataText}>No crop entries available.</Text>
-            )}
-        </ScrollView>
+      <ScrollView contentContainerStyle={addAnimalStyle.screen}>
+        <TouchableOpacity style={addAnimalStyle.fab}>
+          <Link href="../screen/addCrop">
+              <Ionicons name="add" size={24} color="white" />
+          </Link>
+        </TouchableOpacity>
+        {dataCrop.length > 0 ? (
+          dataCrop.map((crop, index) => (
+            <View key={index} style={addAnimalStyle.card}>
+              <View style={addAnimalStyle.cardContent}>
+                <Text style={addAnimalStyle.cardTitle}>{crop.crop_name}</Text>
+                <Text style={addAnimalStyle.cardText}>{crop.crop_details}</Text>
+                <Text style={addAnimalStyle.cardDate}>{new Date(crop.crop_date).toLocaleDateString()}</Text>
+              </View>
+              <View style={addAnimalStyle.cardActions}>
+                <TouchableOpacity onPress={() => handleEdit(crop._id)} style={addAnimalStyle.actionButton}>
+                    <Ionicons name="create-outline" size={20} color="#4CAF50" />
+                    <Text style={addAnimalStyle.actionText}>Edit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleDelete(crop._id)} style={addAnimalStyle.actionButton}>
+                    <Ionicons name="trash-outline" size={20} color="#F44336" />
+                    <Text style={addAnimalStyle.actionText}>Delete</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))
+        ) : (
+            <Text style={addAnimalStyle.noDataText}>No crop entries available.</Text>
+        )}
+      </ScrollView>
     )
 }
 
@@ -308,93 +308,4 @@ const MyFarm = () => {
 
 export default MyFarm
 
-const styles = StyleSheet.create({
-    screen: {
-        flex: 1,
-        backgroundColor: '#F9FAFB',
-        paddingHorizontal: 16,
-        paddingVertical: 10,
-    },
-    fab: {
-        position: 'absolute',
-        bottom: 20,
-        right: 20,
-        backgroundColor: '#0A593C',
-        width: 56,
-        height: 56,
-        borderRadius: 28,
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 10,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: '600',
-        color: '#0A593C',
-        marginBottom: 16,
-    },
-    card: {
-        backgroundColor: '#FFFFFF',
-        borderRadius: 8,
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 5,
-        padding: 16,
-        marginBottom: 16,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    cardContent: {
-        flex: 1,
-        marginLeft: 12,
-    },
-    cardTitle: {
-        fontSize: 18,
-        fontWeight: '600',
-        color: '#333333',
-    },
-    cardText: {
-        fontSize: 14,
-        color: '#555555',
-    },
-    cardQuantity: {
-        fontSize: 14,
-        color: '#888888',
-    },
-    cardDate: {
-        fontSize: 12,
-        color: '#AAAAAA',
-    },
-    cardImage: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        backgroundColor: '#EEEEEE',
-    },
-    noDataText: {
-        fontSize: 16,
-        color: '#888888',
-        textAlign: 'center',
-        marginTop: 20,
-    },
-    modalContainer: {
-      flex: 1,
-      justifyContent: "center",
-      padding: 20,
-      backgroundColor: "#fff"
-    },
-    modalTitle: {
-      fontSize: 20,
-      marginBottom: 20,
-      fontWeight: "bold"
-    },
-    input: {
-      backgroundColor: "#F8F8F8",
-      padding: 10,
-      marginVertical: 5,
-      borderRadius: 5,
-      borderColor: "#E5E5EA",
-      borderWidth: 1
-    },
-})
+
