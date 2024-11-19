@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity, Alert, TextInput, FlatList, RefreshControl, Modal, Button } from 'react-native'
+import { Text, View, ScrollView, Image, TouchableOpacity, Alert, TextInput, FlatList, RefreshControl, Modal, Button } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
 import { Ionicons } from "@expo/vector-icons"
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { Link } from 'expo-router'
-import { addAnimalStyle } from "../style/addAnimalStyle";
+import { myFarm } from '../style/myFarm'
 
 const localip = process.env.EXPO_PUBLIC_LOCAL_IP
 
@@ -18,7 +18,6 @@ const Animal = () => {
     const [aniName, setAniName] = useState("")
     const [aniDetails, setAniDetails] = useState("")
     const [aniQuantity, setAniQuantity] = useState("")
-    // const [aniImage, setAniImage] = useState("")
     
     const fetchAnimal = () => {
         fetch(`http://${localip}:5001/fetchAnimal`, {
@@ -69,21 +68,21 @@ const Animal = () => {
       ])
     }
 
-    const handleEdit = (data) => {
+    const handleEditAnimal = (data) => {
         console.log("Selected Animal: ", data);
 
         setSelectedAnimal(data);
         setAniDetails(data.animal_details);
-        setAniQuantity(data.animal_quantity.toString());  // Ensure it's a string
+        setAniQuantity(data.animal_quantity.toString());  
         setAniName(data.animal_name);
         setShowEditModal(true);
     }
     
-    const handleSaveEdit = async () => {
+    const handleSaveEditAnimal = async () => {
         const updatedAnimal = {
             animal_details: aniDetails,
             animal_quantity: aniQuantity,
-            animal_name: aniName, // Corrected the key name here
+            animal_name: aniName, 
         }
     
         try {
@@ -119,61 +118,61 @@ const Animal = () => {
     }, [])
   
     return (
-      <ScrollView contentContainerStyle={styles.screen}>
-        <TouchableOpacity style={styles.fab}>
+      <ScrollView contentContainerStyle={myFarm.screen}>
+        <TouchableOpacity style={myFarm.fab}>
           <Link href="../screen/addAnimal">
             <Ionicons name="add" size={24} color="white" />
           </Link>
         </TouchableOpacity>
         {dataAnimal.length > 0 ? (
           dataAnimal.map((animal, index) => (
-            <View key={index} style={styles.card}>
-              <Image source={{ uri: animal.animal_image }} style={styles.cardImage} />
-              <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>{animal.animal_name}</Text>
-                <Text style={styles.cardText}>{animal.animal_details}</Text>
-                <Text style={styles.cardQuantity}>Quantity: {animal.animal_quantity}</Text>
+            <View key={index} style={myFarm.card}>
+              <Image source={{ uri: animal.animal_image }} style={myFarm.cardImage} />
+              <View style={myFarm.cardContent}>
+                <Text style={myFarm.cardTitle}>{animal.animal_name}</Text>
+                <Text style={myFarm.cardText}>{animal.animal_details}</Text>
+                <Text style={myFarm.cardQuantity}>Quantity: {animal.animal_quantity}</Text>
               </View>
-              <View style={styles.cardActions}>
-                <TouchableOpacity onPress={() => handleEdit(animal)} style={styles.actionButton}>
+              <View style={myFarm.cardActions}>
+                <TouchableOpacity onPress={() => handleEditAnimal(animal)} style={myFarm.actionButton}>
                   <Ionicons name="create-outline" size={20} color="#4CAF50" />
-                  <Text style={styles.actionText}>Edit</Text>
+                  <Text style={myFarm.actionText}>Edit</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleDelete(animal._id)} style={styles.actionButton}>
+                <TouchableOpacity onPress={() => handleDelete(animal._id)} style={myFarm.actionButton}>
                   <Ionicons name="trash-outline" size={20} color="#F44336" />
-                  <Text style={styles.actionText}>Delete</Text>
+                  <Text style={myFarm.actionText}>Delete</Text>
                 </TouchableOpacity>
               </View>
             </View>
           ))
         ) : (
-          <Text style={styles.noDataText}>No animal entries available.</Text>
+          <Text style={myFarm.noDataText}>No animal entries available.</Text>
         )}
         <Modal visible={showEditModal} animationType="slide" onRequestClose={() => setShowEditModal(false)}>
-        <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Edit Animal</Text>
-            <TextInput 
-                style={styles.input} 
-                value={aniName} 
-                onChangeText={setAniName} 
-                placeholder="Name" 
-            />
-            <TextInput 
-                style={styles.input} 
-                value={aniDetails} 
-                onChangeText={setAniDetails} 
-                placeholder="Details" 
-            />
-            <TextInput
-                style={styles.input}
-                value={aniQuantity} 
-                onChangeText={setAniQuantity}
-                placeholder="Quantity"
-                keyboardType="numeric"
-            />
-            <Button title="Save" onPress={handleSaveEdit} />
-            <Button title="Cancel" onPress={() => setShowEditModal(false)} />
-        </View>
+          <View style={myFarm.modalContainer}>
+              <Text style={myFarm.modalTitle}>Edit Animal</Text>
+              <TextInput 
+                  style={myFarm.input} 
+                  value={aniName} 
+                  onChangeText={setAniName} 
+                  placeholder="Name" 
+              />
+              <TextInput 
+                  style={myFarm.input} 
+                  value={aniDetails} 
+                  onChangeText={setAniDetails} 
+                  placeholder="Details" 
+              />
+              <TextInput
+                  style={myFarm.input}
+                  value={aniQuantity} 
+                  onChangeText={setAniQuantity}
+                  placeholder="Quantity"
+                  keyboardType="numeric"
+              />
+              <Button title="Save" onPress={handleSaveEditAnimal} />
+              <Button title="Cancel" onPress={() => setShowEditModal(false)} />
+          </View>
         </Modal>
       </ScrollView>
     )
@@ -181,6 +180,12 @@ const Animal = () => {
 
 const Crop = () => {
     const [dataCrop, setDataCrop] = useState([])
+
+    const [showEditModal, setShowEditModal] = useState(false)
+
+    const [selectedCrop, setSelectedCrop] = useState("")
+    const [cropName, setCropName] = useState("")
+    const [cropDetails, setCropDetails] = useState("")
 
     const fetchCrop = () => {
         fetch(`http://${localip}:5001/fetchCrop`, {
@@ -195,70 +200,130 @@ const Crop = () => {
             })
     }
     const handleDelete = (cropId) => {
-        Alert.alert("Confirm Delete", "Are you sure you want to delete this crop?", [
-          { text: "Cancel", style: "cancel" },
-          {
-            text: "Delete",
-            style: "destructive",
-            onPress: () => {
-              fetch(`http://${localip}:5001/deleteCrop`, {
-                method: "DELETE",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ cropId }),
+      Alert.alert("Confirm Delete", "Are you sure you want to delete this crop?", [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => {
+            fetch(`http://${localip}:5001/deleteCrop`, {
+              method: "DELETE",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ cropId }),
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                if (data.message === "Crop deleted successfully") {
+                  Alert.alert("Success", data.message)
+                  fetchCrop() // Refresh the list
+                } else {
+                  Alert.alert("Error", data.message)
+                }
               })
-                .then((res) => res.json())
-                .then((data) => {
-                  if (data.message === "Crop deleted successfully") {
-                    Alert.alert("Success", data.message)
-                    fetchCrop() // Refresh the list
-                  } else {
-                    Alert.alert("Error", data.message)
-                  }
-                })
-                .catch((error) => {
-                  console.error("Error deleting crop: ", error)
-                  Alert.alert("Error", "Could not delete crop.")
-                })
-            },
+              .catch((error) => {
+                console.error("Error deleting crop: ", error)
+                Alert.alert("Error", "Could not delete crop.")
+              })
           },
-        ])
+        },
+      ])
+    }
+
+    const handleEditCrop = (data) => {
+      setSelectedCrop(data);
+      setCropName(data.crop_name);
+      setCropDetails(data.crop_details)
+      setShowEditModal(true);
+    }
+    const handleSaveEditCrop = async () => {
+      const updatedCrop = {
+        crop_name: cropName,
+        crop_details: cropDetails,
       }
+  
+      try {
+          const response = await fetch(`http://${localip}:5001/editCrop`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ 
+                  cropId: selectedCrop._id, 
+                  updatedData: updatedCrop 
+              }),
+          });
+  
+          if (response.ok) {
+              const updatedData = await response.json();
+              setDataCrop((prevData) =>
+                  prevData.map((crop) =>
+                      crop._id === selectedCrop._id
+                          ? { ...crop, ...updatedCrop }
+                          : crop
+                  )
+              );
+              setShowEditModal(false);
+          } else {
+              console.error("Error updating crop in database");
+          }
+      } catch (error) {
+          console.error("Error updating crop:", error);
+      }
+  }
 
     useEffect(() => {
         fetchCrop()
     }, [])
 
     return (
-        <ScrollView contentContainerStyle={styles.screen}>
-            <TouchableOpacity style={styles.fab}>
+        <ScrollView contentContainerStyle={myFarm.screen}>
+            <TouchableOpacity style={myFarm.fab}>
                 <Link href="../screen/addCrop">
                     <Ionicons name="add" size={24} color="white" />
                 </Link>
             </TouchableOpacity>
             {dataCrop.length > 0 ? (
                 dataCrop.map((crop, index) => (
-                    <View key={index} style={styles.card}>
-                      <Image source={{ uri: crop.crop_image }} style={styles.cardImage} />
-                        <View style={styles.cardContent}>
-                            <Text style={styles.cardTitle}>{crop.crop_name}</Text>
-                            <Text style={styles.cardText}>{crop.crop_details}</Text>
-                            <Text style={styles.cardDate}>{new Date(crop.crop_date).toLocaleDateString()}</Text>
+                    <View key={index} style={myFarm.card}>
+                      <Image source={{ uri: crop.crop_image }} style={myFarm.cardImage} />
+                        <View style={myFarm.cardContent}>
+                            <Text style={myFarm.cardTitle}>{crop.crop_name}</Text>
+                            <Text style={myFarm.cardText}>{crop.crop_details}</Text>
+                            <Text style={myFarm.cardDate}>{new Date(crop.crop_date).toLocaleDateString()}</Text>
                         </View>
-                        <View style={styles.cardActions}>
-                            <TouchableOpacity onPress={() => handleEdit(crop._id)} style={styles.actionButton}>
+                        <View style={myFarm.cardActions}>
+                            <TouchableOpacity onPress={() => handleEditCrop(crop)} style={myFarm.actionButton}>
                                 <Ionicons name="create-outline" size={20} color="#4CAF50" />
-                                <Text style={styles.actionText}>Edit</Text>
+                                <Text style={myFarm.actionText}>Edit</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => handleDelete(crop._id)} style={styles.actionButton}>
+                            <TouchableOpacity onPress={() => handleDelete(crop._id)} style={myFarm.actionButton}>
                                 <Ionicons name="trash-outline" size={20} color="#F44336" />
-                                <Text style={styles.actionText}>Delete</Text>
+                                <Text style={myFarm.actionText}>Delete</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                 ))
             ) : (
-                <Text style={styles.noDataText}>No crop entries available.</Text>
+                <Text style={myFarm.noDataText}>No crop entries available.</Text>
             )}
+          <Modal visible={showEditModal} animationType="slide" onRequestClose={() => setShowEditModal(false)}>
+            <View style={myFarm.modalContainer}>
+                <Text style={myFarm.modalTitle}>Edit Crop</Text>
+                <TextInput 
+                    style={myFarm.input} 
+                    value={cropName} 
+                    onChangeText={setCropName} 
+                    placeholder="Name" 
+                    editable={false}
+                />
+                <TextInput
+                    style={myFarm.input}
+                    value={cropDetails} 
+                    onChangeText={setCropDetails}
+                    placeholder="Details"
+                />
+                <Button title="Save" onPress={handleSaveEditCrop} />
+                <Button title="Cancel" onPress={() => setShowEditModal(false)} />
+            </View>
+          </Modal>
         </ScrollView>
     )
 }
@@ -309,93 +374,4 @@ const MyFarm = () => {
 
 export default MyFarm
 
-const styles = StyleSheet.create({
-    screen: {
-        flex: 1,
-        backgroundColor: '#F9FAFB',
-        paddingHorizontal: 16,
-        paddingVertical: 10,
-    },
-    fab: {
-        position: 'absolute',
-        bottom: 20,
-        right: 20,
-        backgroundColor: '#0A593C',
-        width: 56,
-        height: 56,
-        borderRadius: 28,
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 10,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: '600',
-        color: '#0A593C',
-        marginBottom: 16,
-    },
-    card: {
-        backgroundColor: '#FFFFFF',
-        borderRadius: 8,
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 5,
-        padding: 16,
-        marginBottom: 16,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    cardContent: {
-        flex: 1,
-        marginLeft: 12,
-    },
-    cardTitle: {
-        fontSize: 18,
-        fontWeight: '600',
-        color: '#333333',
-    },
-    cardText: {
-        fontSize: 14,
-        color: '#555555',
-    },
-    cardQuantity: {
-        fontSize: 14,
-        color: '#888888',
-    },
-    cardDate: {
-        fontSize: 12,
-        color: '#AAAAAA',
-    },
-    cardImage: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        backgroundColor: '#EEEEEE',
-    },
-    noDataText: {
-        fontSize: 16,
-        color: '#888888',
-        textAlign: 'center',
-        marginTop: 20,
-    },
-    modalContainer: {
-      flex: 1,
-      justifyContent: "center",
-      padding: 20,
-      backgroundColor: "#fff"
-    },
-    modalTitle: {
-      fontSize: 20,
-      marginBottom: 20,
-      fontWeight: "bold"
-    },
-    input: {
-      backgroundColor: "#F8F8F8",
-      padding: 10,
-      marginVertical: 5,
-      borderRadius: 5,
-      borderColor: "#E5E5EA",
-      borderWidth: 1
-    },
-})
+

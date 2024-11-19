@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from "react-native";
+import React, { useState } from "react"
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from "react-native"
 
 const Settings = () => {
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const [oldPassword, setOldPassword] = useState("")
+  const [newPassword, setNewPassword] = useState("")
+  const [email, setEmail] = useState("")
   const localip = process.env.EXPO_PUBLIC_LOCAL_IP
-
 
   const handleChangePassword = async () => {
     try {
@@ -20,20 +19,20 @@ const Settings = () => {
           old_password: oldPassword,
           new_password: newPassword,
         }),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.status === "ok") {
-        Alert.alert("Success", data.message);
+        Alert.alert("Success", data.message)
       } else {
-        Alert.alert("Error", data.message);
+        Alert.alert("Error", data.message)
       }
     } catch (error) {
       console.log(error)
-      Alert.alert("Error", "Something went wrong!", error);
+      Alert.alert("Error", "Something went wrong!")
     }
-  };
+  }
 
   return (
     <View style={styles.container}>
@@ -43,6 +42,7 @@ const Settings = () => {
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
+        placeholderTextColor="#aaa"
       />
       <TextInput
         style={styles.input}
@@ -50,6 +50,7 @@ const Settings = () => {
         value={oldPassword}
         secureTextEntry
         onChangeText={setOldPassword}
+        placeholderTextColor="#aaa"
       />
       <TextInput
         style={styles.input}
@@ -57,46 +58,55 @@ const Settings = () => {
         value={newPassword}
         secureTextEntry
         onChangeText={setNewPassword}
+        placeholderTextColor="#aaa"
       />
       <TouchableOpacity style={styles.button} onPress={handleChangePassword}>
         <Text style={styles.buttonText}>Confirm</Text>
       </TouchableOpacity>
     </View>
-  );
-};
+  )
+}
 
-export default Settings;
+export default Settings
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#F9F9F9",
   },
   header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
+    fontSize: 26,
+    fontWeight: "600",
+    marginBottom: 30,
     textAlign: "center",
-    color: "#333",
+    color: "#1C1C1E",
   },
   input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    padding: 15,
     marginBottom: 15,
-    width: "100%",
+    fontSize: 16,
+    color: "#1C1C1E",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
   },
   button: {
-    backgroundColor: "#4CAF50",
-    padding: 15,
-    borderRadius: 5,
+    backgroundColor: "#0a593c",
+    paddingVertical: 15,
+    borderRadius: 12,
     alignItems: "center",
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 2,
   },
   buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
+    color: "#FFFFFF",
+    fontSize: 18,
+    fontWeight: "600",
   },
-});
+})

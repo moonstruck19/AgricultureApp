@@ -1,50 +1,65 @@
-# Welcome to your Expo app 👋
+# Agriculture App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A mobile application for agriculture management.
 
-## Get started
+## Prerequisites
 
-1. Install dependencies
+Before you begin, ensure you have the following installed:
+- [Visual Studio Code](https://code.visualstudio.com/)
+- [NodeJS](https://nodejs.org/)
 
-   ```bash
-   npm install
-   ```
+## Installation and Setup
 
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### 1. Clone the Repository
 
 ```bash
-npm run reset-project
+git clone https://github.com/moonstruck19/AgricultureApp.git
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Install Dependencies
 
-## Learn more
+Navigate to the project directory and run:
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+npm install
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+This command will install all necessary dependencies for the project (including expo, node_modules, etc.).
 
-## Join the community
+### 3. Start the Server
 
-Join our community of developers creating universal apps.
+Run the following command to start the application server:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+npm run server
+```
+
+### 4. Launch the Application
+
+Start the application by running:
+
+```bash
+npm run start
+```
+
+### 5. Access the Application
+
+After running step 4, you have several options to access the application:
+
+#### Option A: Using an Android Emulator
+- Launch your Android emulator (Android Studio, etc.)
+- Press `a` in the terminal to start the application in the emulator
+
+#### Option B: Using a Physical Device (Android/iOS)
+1. Download the Expo Go app:
+   - [Android: Google Play Store](https://play.google.com/store/apps/details?id=host.exp.exponent)
+   - [iOS: App Store](https://apps.apple.com/app/expo-go/id982107779)
+2. Scan the QR Code shown in the terminal using the Expo Go app
+
+#### Option C: Web Browser
+- Press `w` in the terminal to open the application in your web browser
+
+## Support
+
+If you encounter any issues or have questions, please open an issue in the repository.
+

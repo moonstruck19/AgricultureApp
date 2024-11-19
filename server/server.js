@@ -17,6 +17,8 @@ require('../app/model/type')
 app.use(cors())
 app.use(bodyParser.json())
 
+//================================CONNECT DATABASE===================================//
+
 const mongoUrl = 'mongodb+srv://lamborghininguyn:G0V7J1wZXC5wDfXi@cluster0.7uvb1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 
 mongoose.connect(mongoUrl).then(() => {
@@ -34,14 +36,72 @@ const Revenue = mongoose.model("revenueMana")
 const Expense = mongoose.model("expenseMana")
 const Type = mongoose.model("typeManagerment")
 
+const { verifyUserEmail } = require("../server/email")
+const { randomNumber } = require("../server/email")
+
 // Root route
 app.get("/", (req, res) => {
     res.send({status: "Started"})
 })
 
+//================================RESET PASS===================================//
+
+app.post('/resetPassword', async (req, res) => {
+  try {
+      const { email } = req.body; // Correctly extract the email field from the request body
+      const existingUser = await User.findOne({ user_email: email }); // Query the database using user_email
+
+      if (!existingUser) {
+          console.error('User does not exist');
+          return res.send({ success: false, message: 'If user exists, an email was sent' });
+      }
+
+      const token = randomNumber(1000, 9999);
+      existingUser.resettoken = token;
+      existingUser.resettokenExpiration = Date.now() + 3600000;
+      await existingUser.save();
+
+      await verifyUserEmail(email, token); 
+      return res.send({ success: true, message: 'Email sent' });
+
+  } catch (error) {
+      console.error('Error in /resetPassword:', error);
+      return res.status(500).send({ success: false, message: 'Internal server error' });
+  }
+});
+
+app.post('/verifyPass', async (req, res) => {
+  try {
+    const { resettoken, new_password } = req.body
+
+    const user = await User.findOne({ resettoken: resettoken });
+
+    if (!user || resettoken !== user.resettoken) {
+      return res.status(400).send({ success: false, message: 'Invalid or missing reset token.' });
+    }
+    if (user.resettokenExpiration < new Date()) {
+      return res.status(400).send({ success: false, message: 'Token has expired.' });
+    }
+
+    const hashedPassword = await bcrypt.hash(new_password, 5);
+
+    user.user_password = hashedPassword;
+    user.resettoken = '';
+    user.resettokenExpiration = null;
+
+    await user.save();
+    console.log('Received request at /resetPasswordConfirm:', req.body);
+    return res.status(200).send({ success: true });
+    
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ success: false, message: 'An error occurred. Please try again later.' });
+  }
+});
+
 //================================LOGIN/REGISTER===================================//
 app.post('/register', async (req, res) => {
-    const { user_email, user_password } = req.body
+    const { user_email, user_password, code, verified, resettoken, resettokenExpiration } = req.body
     const encryptedPassword = await bcrypt.hash(user_password, 5)
     
     // Check if the user already exists
@@ -51,10 +111,13 @@ app.post('/register', async (req, res) => {
     }
 
     try {
-        // Create a new user
         await User.create({
             user_email: user_email,
             user_password: encryptedPassword,
+            code: "",
+            verified: true,
+            resettoken: "",
+            resettokenExpiration: ""
         })
         res.status(201).send({
             status: "ok",
@@ -324,7 +387,7 @@ app.put('/editCrop', async (req, res) => {
 //================================ANIMAL MANAGERMENT===================================//
 
 app.post('/addAnimal', async (req, res) => {
-    const { animal_name, animal_date, animal_details, animal_quantity, animal_image } = req.body;
+    const { animal_name, animal_date, animal_details, animal_quantity, animal_image } = req.body
 
     try {
         await Animal.create({
@@ -333,18 +396,18 @@ app.post('/addAnimal', async (req, res) => {
             animal_details: animal_details,
             animal_quantity: animal_quantity,
             animal_image: animal_image // Include the animal_image field
-        });
+        })
         res.status(201).send({
             status: "ok",
             message: "Animal added successfully"
-        });
+        })
     } catch (error) {
         res.status(500).send({
             status: "error",
             message: error.message
-        });
+        })
     }
-});
+})
 
 app.get('/fetchAnimal', async(req, res) => {
     try {
@@ -674,7 +737,7 @@ app.get('/fetchReport', async (req, res) => {
             total: { $sum: { $multiply: [{ $toDouble: "$re_quantity" }, { $toDouble: "$re_price" }] } }
           }
         }
-      ]);
+      ])
   
       const totalExpense = await mongoose.model('expenseMana').aggregate([
         {
@@ -683,19 +746,19 @@ app.get('/fetchReport', async (req, res) => {
             total: { $sum: { $multiply: [{ $toDouble: "$ex_quantity" }, { $toDouble: "$ex_price" }] } }
           }
         }
-      ]);
+      ])
   
-      const profit = (totalRevenue[0]?.total || 0) - (totalExpense[0]?.total || 0);
+      const profit = (totalRevenue[0]?.total || 0) - (totalExpense[0]?.total || 0)
   
       res.status(200).json({
         totalRevenue: totalRevenue[0]?.total || 0,
         totalExpense: totalExpense[0]?.total || 0,
         profit,
-      });
+      })
     } catch (error) {
-      res.status(500).json({ message: 'Error fetching report data', error });
+      res.status(500).json({ message: 'Error fetching report data', error })
     }
-  });
+  })
 
 // Start server
 app.listen(5001, () => {

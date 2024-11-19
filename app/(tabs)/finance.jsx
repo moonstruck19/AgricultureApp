@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ScrollView, RefreshControl, Modal, TextInput, Button, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { Text, View, ScrollView, RefreshControl, Modal, TextInput, Button, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from 'expo-router';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Report from '../screen/report';
+import { finance } from '../style/finance';
 
 const localip = process.env.EXPO_PUBLIC_LOCAL_IP;
 
@@ -112,62 +113,67 @@ const Revenue = () => {
 
   return (
     <ScrollView
-      style={styles.screen}
-      contentContainerStyle={styles.contentContainer}
+      style={finance.screen}
+      contentContainerStyle={finance.contentContainer}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
       }
     >
-      <TouchableOpacity style={styles.fab}>
+      <TouchableOpacity style={finance.fab}>
         <Link href="../screen/addRevenue">
           <Ionicons name="add" size={24} color="white" />
         </Link>
       </TouchableOpacity>
       {dataRevenue.length > 0 ? (
         dataRevenue.map((data, index) => (
-          <View key={index} style={styles.card}>
+          <View key={index} style={finance.card}>
             <Text>Date: {new Date(data.re_date).toLocaleString()}</Text>
             <Text>Type: {data.re_type}</Text>
             <Text>Quantity: {data.re_quantity}</Text>
             <Text>Revenue: ${data.re_price}</Text>
-            <View style={styles.buttonContainer}>
+            <View style={finance.buttonContainer}>
               <TouchableOpacity
-                style={styles.editButton}
+                style={finance.editButton}
                 onPress={() => handleEdit(data)}
               >
-                <Text style={styles.buttonText}>Edit</Text>
+                <Text style={finance.buttonText}>Edit</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.deleteButton}
+                style={finance.deleteButton}
                 onPress={() => handleDelete(data._id)}
               >
-                <Text style={styles.buttonText}>Delete</Text>
+                <Text style={finance.buttonText}>Delete</Text>
               </TouchableOpacity>
             </View>
           </View>
         ))
       ) : (
-        <Text style={styles.noData}>No revenue entries available.</Text>
+        <Text style={finance.noData}>No revenue entries available.</Text>
       )}
 
       <Modal visible={showEditModal} animationType="slide">
-        <View style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>Edit Revenue</Text>
+        <View style={finance.modalContainer}>
+          <Text style={finance.modalTitle}>Edit Revenue</Text>
+          <Text>Type of Revenue</Text>
           <TextInput
-            style={styles.input}
+            style={finance.input}
             value={reType}
             onChangeText={setReType}
             placeholder="Type"
+            editable={false}
           />
+          <Text>Quantity</Text>
           <TextInput
-            style={styles.input}
+            style={finance.input}
             value={reQuantity}
             onChangeText={setReQuantity}
             placeholder="Quantity"
             keyboardType="numeric"
+            editable={false}
           />
+          <Text>Price</Text>
           <TextInput
-            style={styles.input}
+            style={finance.input}
             value={rePrice}
             onChangeText={setRePrice}
             placeholder="Price"
@@ -287,62 +293,68 @@ const Expense = () => {
 
   return (
     <ScrollView
-      style={styles.screen}
-      contentContainerStyle={styles.contentContainer}
+      style={finance.screen}
+      contentContainerStyle={finance.contentContainer}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
       }
     >
-      <TouchableOpacity style={styles.fab}>
+      <TouchableOpacity style={finance.fab}>
         <Link href="../screen/addExpense">
           <Ionicons name="add" size={24} color="white" />
         </Link>
       </TouchableOpacity>
       {dataExpense.length > 0 ? (
         dataExpense.map((data, index) => (
-          <View key={index} style={styles.card}>
+          <View key={index} style={finance.card}>
             <Text>Date: {new Date(data.ex_date).toLocaleString()}</Text>
             <Text>Type: {data.ex_type}</Text>
             <Text>Quantity: {data.ex_quantity}</Text>
             <Text>Expense: ${data.ex_price}</Text>
-            <View style={styles.buttonContainer}>
+            <View style={finance.buttonContainer}>
               <TouchableOpacity
-                style={styles.editButton}
+                style={finance.editButton}
                 onPress={() => handleEdit(data)}
               >
-                <Text style={styles.buttonText}>Edit</Text>
+                <Text style={finance.buttonText}>Edit</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.deleteButton}
+                style={finance.deleteButton}
                 onPress={() => handleDelete(data._id)}
               >
-                <Text style={styles.buttonText}>Delete</Text>
+                <Text style={finance.buttonText}>Delete</Text>
               </TouchableOpacity>
             </View>
           </View>
         ))
       ) : (
-        <Text style={styles.noData}>No expense entries available.</Text>
+        <Text style={finance.noData}>No expense entries available.</Text>
       )}
 
       <Modal visible={showEditModal} animationType="slide">
-        <View style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>Edit Expense</Text>
+        <View style={finance.modalContainer}>
+          <Text style={finance.modalTitle}>Edit Expense</Text>
+          <Text>Type of Expense</Text>
           <TextInput
-            style={styles.input}
+            style={finance.input}
             value={exType}
             onChangeText={setExType}
             placeholder="Type"
+            editable={false}
           />
+          <Text>Quantity</Text>
           <TextInput
-            style={styles.input}
+            style={finance.input}
             value={exQuantity}
             onChangeText={setExQuantity}
             placeholder="Quantity"
             keyboardType="numeric"
+            maxLength={4}
+            editable={false}
           />
+          <Text>Price</Text>
           <TextInput
-            style={styles.input}
+            style={finance.input}
             value={exPrice}
             onChangeText={setExPrice}
             placeholder="Price"
@@ -360,6 +372,7 @@ const Statistical = () => {
   const [reportData, setReportData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
 
   const fetchReport = async () => {
     try {
@@ -385,7 +398,7 @@ const Statistical = () => {
 
   if (loading) {
     return (
-      <View style={styles.centered}>
+      <View style={finance.centered}>
         <ActivityIndicator size="large" color="#00A86B" />
         <Text>Loading report data...</Text>
       </View>
@@ -394,18 +407,18 @@ const Statistical = () => {
 
   if (error) {
     return (
-      <View style={styles.centered}>
-        <Text style={styles.errorText}>{error}</Text>
+      <View style={finance.centered}>
+        <Text style={finance.errorText}>{error}</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Financial Report</Text>
-      <Text style={styles.label}>Total Revenue: ${reportData.totalRevenue.toFixed(2)}</Text>
-      <Text style={styles.label}>Total Expense: ${reportData.totalExpense.toFixed(2)}</Text>
-      <Text style={styles.label}>Profit: ${reportData.profit.toFixed(2)}</Text>
+    <View style={finance.container}>
+      {/* <Text>Test</Text> */}
+      <Text style={finance.label}>Total Revenue: ${reportData.totalRevenue.toFixed(2)}</Text>
+      <Text style={finance.label}>Total Expense: ${reportData.totalExpense.toFixed(2)}</Text>
+      <Text style={finance.label}>Profit: ${reportData.profit.toFixed(2)}</Text>
     </View>
   );
 };
@@ -467,150 +480,3 @@ const Finance = () => {
 };
 
 export default Finance;
-
-const styles = StyleSheet.create({
-  // screen: {
-  //   flex: 1,
-  //   backgroundColor: '#fff',
-  // },
-  // title: {
-  //   fontSize: 24,
-  //   fontWeight: 'bold',
-  //   color: '#333',
-  //   marginBottom: 10,
-  // },
-  screen: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-  },
-  fab: {
-    position: 'absolute',
-    bottom: 20, // Position above the bottom of the screen
-    right: 20,  // Position to the right
-    backgroundColor: '#0A593C',
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 4, // Add shadow for Android
-    shadowColor: '#000', // Add shadow for iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    zIndex: 10,
-},
-
-  content: {
-    fontSize: 18,
-    color: '#555',
-  },
-  subtitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-    marginTop: 20,
-  },
-  contentContainer: {
-    alignItems: 'center',
-    padding: 10,
-  },
-  card: {
-    backgroundColor: '#FFF',
-    padding: 15,
-    borderRadius: 8,
-    marginVertical: 10,
-    width: '90%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  noData: {
-    fontSize: 16,
-    color: '#888',
-    textAlign: 'center',
-    marginTop: 20,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Adds a semi-transparent background
-    padding: 20,
-  },
-  modalContent: {
-    width: "90%",
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5, // For Android shadow
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 15,
-    textAlign: "center",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 15,
-    width: "100%",
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 10
-  },
-  editButton: {
-    backgroundColor: "#0a593c",
-    padding: 5,
-    borderRadius: 5
-  },
-  deleteButton: {
-    backgroundColor: "#FF3B30",
-    padding: 5,
-    borderRadius: 5
-  },
-  buttonText: {
-    color: "#fff"
-  },
-  saveButton: {
-    backgroundColor: "#4CAF50",
-  },
-  cancelButton: {
-    backgroundColor: "#f44336", // Red color for Cancel
-  },
-  buttonText: {
-    color: "#4caf50",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  centered: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  label: {
-    fontSize: 18,
-    color: '#555',
-    marginVertical: 5,
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 16,
-    marginVertical: 5,
-  },
-});

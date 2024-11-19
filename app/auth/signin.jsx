@@ -22,7 +22,7 @@ const Signin = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Welcome Back</Text>
       <Formik
-        initialValues={{ email: "test3@gmail.com", password: "123456" }}
+        initialValues={{ email: "hungnp.21it@vku.udn.vn", password: "12345678" }}
         onSubmit={async (values) => {
           try {
             const response = await fetch(`http://${localip}:5001/login`, {
@@ -95,6 +95,13 @@ const Signin = () => {
           </Link>
         </Pressable>
       </Text>
+      <Text style={styles.signupText}>      
+        <Pressable>
+          <Link href="./forgotPass" style={styles.signupLink}>
+            Forgot password?
+          </Link>
+        </Pressable>
+      </Text>
     </View>
   )
 }
@@ -137,7 +144,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#0a593c',
     paddingVertical: 15,
     paddingHorizontal: 90,
-    borderRadius: 12,
+    borderRadius: 25,
     marginTop: 10,
     shadowColor: '#000',
     shadowOpacity: 0.1,

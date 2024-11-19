@@ -12,6 +12,8 @@ export const tabHome = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 20,
+    paddingHorizontal: 15,
+    paddingVertical: 15,
   },
   greeting: {
     fontSize: 18,
@@ -150,6 +152,9 @@ export const tabHome = StyleSheet.create({
     fontSize: 20,
     marginBottom: 20,
     fontWeight: "bold"
+  },
+  editContainer: {
+    paddingBottom: 20,
   },
   dropdownLabel: {
     fontSize: 16,
