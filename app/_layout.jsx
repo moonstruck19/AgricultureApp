@@ -48,6 +48,28 @@ const RootLayout = () => {
                 }}
             />
             <Stack.Screen 
+                name="auth/forgotPass" 
+                options={{
+                    headerShown: true,
+                    title: 'Forgot Password',
+                    headerBackTitle: 'Back',
+                    headerBackTitleStyle: {
+                        fontSize: 16
+                    }
+                }}
+            />
+            <Stack.Screen 
+                name="auth/verifyPass" 
+                options={{
+                    headerShown: true,
+                    title: 'Reset Password',
+                    headerBackTitle: 'Back',
+                    headerBackTitleStyle: {
+                        fontSize: 16
+                    }
+                }}
+            />
+            <Stack.Screen 
                 name="screen/addCrop" 
                 options={{
                     headerShown: true,

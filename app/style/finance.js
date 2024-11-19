@@ -7,21 +7,24 @@ export const finance = StyleSheet.create({
   },
   fab: {
     position: 'absolute',
-    bottom: 20, 
-    right: 20, 
+    bottom: 20, // Position above the bottom of the screen
+    right: 20, // Position to the right
     backgroundColor: '#0A593C',
     width: 56,
     height: 56,
     borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 4, 
-    shadowColor: '#000', 
-    shadowOffset: { width: 0, height: 2 },
+    elevation: 4, // Add shadow for Android
+    shadowColor: '#000', // Add shadow for iOS
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
     shadowOpacity: 0.2,
     shadowRadius: 2,
     zIndex: 10,
-},
+  },
 
   content: {
     fontSize: 18,
@@ -37,13 +40,6 @@ export const finance = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
   card: {
     backgroundColor: '#FFF',
     padding: 15,
@@ -51,7 +47,10 @@ export const finance = StyleSheet.create({
     marginVertical: 10,
     width: '90%',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 2,
@@ -75,16 +74,30 @@ export const finance = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5, 
+    elevation: 5,
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 15,
     textAlign: "center",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 20,
+    backgroundColor: "#fff"
+  },
+  modalTitle: {
+    fontSize: 20,
+    marginBottom: 20,
+    fontWeight: "bold"
   },
   input: {
     borderWidth: 1,
@@ -118,24 +131,27 @@ export const finance = StyleSheet.create({
   cancelButton: {
     backgroundColor: "#f44336",
   },
-  modalContainer: {
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+  },
+  centered: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  container: {
+    flex: 1,
     padding: 20,
-    backgroundColor: "#fff"
   },
-  modalTitle: {
-    fontSize: 20,
-    marginBottom: 20,
-    fontWeight: "bold"
-  },
-  input: {
-    backgroundColor: "#F8F8F8",
-    padding: 10,
+  label: {
+    fontSize: 18,
+    color: '#555',
     marginVertical: 5,
-    borderRadius: 5,
-    borderColor: "#E5E5EA",
-    borderWidth: 1
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 16,
+    marginVertical: 5,
   },
 })
-  
