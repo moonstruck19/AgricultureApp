@@ -121,7 +121,7 @@ const AddAnimal = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={addAnimalStyle.scrollContainer}>
+    <ScrollView contentContainerStyle={addAnimalStyle.container}>
       <Formik
         initialValues={{ animal_name: "", animal_details: "", animal_quantity: "" }}
         onSubmit={(values) => handleAddAnimal(values)}
@@ -155,7 +155,7 @@ const AddAnimal = () => {
             <View style={addAnimalStyle.section}>
               <Text style={addAnimalStyle.label}>Date</Text>
               <View style={addAnimalStyle.inline}>
-                <TouchableOpacity onPress={() => setShowPicker(true)} style={addAnimalStyle.dateButton}>
+                <TouchableOpacity onPress={() => setShowPicker(true)} style={addAnimalStyle.input}>
                   <TextInput
                     value={today}
                     editable={false}
@@ -197,7 +197,7 @@ const AddAnimal = () => {
                 <Text style={addAnimalStyle.errorText}>{errors.animal_quantity}</Text>
               )}
             </View>
-            <Button title="Pick an image from camera roll" onPress={pickImage} />
+            <Button style={addAnimalStyle.buttonImage} title="Pick an image from camera roll" onPress={pickImage} />
             {image && <Image source={{ uri: image }} style={addAnimalStyle.image} />}
             <TouchableOpacity onPress={handleSubmit} style={addAnimalStyle.button}>
                 <Text style={addAnimalStyle.buttonText}>CONFIRM</Text>
