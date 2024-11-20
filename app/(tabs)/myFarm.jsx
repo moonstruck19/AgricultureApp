@@ -9,6 +9,8 @@ import { myFarm } from '../style/myFarm'
 
 const localip = process.env.EXPO_PUBLIC_LOCAL_IP
 
+// const [refreshing, setRefreshing] = useState(false)
+
 
 const Animal = () => {
     const [dataAnimal, setDataAnimal] = useState([])
@@ -20,6 +22,7 @@ const Animal = () => {
     const [aniQuantity, setAniQuantity] = useState("")
     
     const fetchAnimal = () => {
+      // setRefreshing(true)
         fetch(`http://${localip}:5001/fetchAnimal`, {
           method: "GET",
         })
@@ -36,7 +39,12 @@ const Animal = () => {
             console.error("Error fetching animals data: ", error)
             setDataAnimal([]) 
           })
+          // .finally(() => setRefreshing(false))
     }
+    // const onRefreshAnimal = () => {
+    //   setRefreshing(true)
+    //   fetchAnimal()
+    // }
       
     const handleDelete = (animalId) => {
       Alert.alert("Confirm Delete", "Are you sure you want to delete this animal?", [
@@ -118,7 +126,9 @@ const Animal = () => {
     }, [])
   
     return (
-      <ScrollView contentContainerStyle={myFarm.screen}>
+      <ScrollView contentContainerStyle={myFarm.screen}
+        
+      >
         <TouchableOpacity style={myFarm.fab}>
           <Link href="../screen/addAnimal">
             <Ionicons name="add" size={24} color="white" />
@@ -198,6 +208,8 @@ const Crop = () => {
             .catch((error) => {
                 console.error("Error fetching crop data: ", error)
             })
+            // .finally(() => setRefreshing(false))
+
     }
     const handleDelete = (cropId) => {
       Alert.alert("Confirm Delete", "Are you sure you want to delete this crop?", [
@@ -228,6 +240,10 @@ const Crop = () => {
         },
       ])
     }
+    // const onRefreshCrop = () => {
+    //   setRefreshing(true)
+    //   fetchCrop()
+    // }
 
     const handleEditCrop = (data) => {
       setSelectedCrop(data);

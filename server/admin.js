@@ -58,18 +58,17 @@ const startAdminJS = async () => {
     ComponentLoader,
     branding: {
       companyName: 'Agriculture Farm',
-      logo: 'https://your-logo-url.com/logo.png', // Replace with your logo URL
-      theme: {
-        colors: {
-          primary100: '#0a593c',
-          primary80: '#0a593c',
-          primary60: '#0a593c',
-          primary40: '#0a593c',
-          primary20: '#0a593c',
-          grey100: '#f0f0f5',
-          white: '#ffffff',
-        },
-      },
+      // theme: {
+      //   colors: {
+      //     primary100: '#0a593c',
+      //     primary80: '#0a593c',
+      //     primary60: '#0a593c',
+      //     primary40: '#0a593c',
+      //     primary20: '#0a593c',
+      //     grey100: '#f0f0f5',
+      //     white: '#ffffff',
+      //   },
+      // },
     },
   });
 

@@ -113,6 +113,17 @@ const RootLayout = () => {
                     }
                 }}
             />
+            <Stack.Screen 
+                name="screen/addExpense" 
+                options={{
+                    headerShown: true,
+                    title: 'New Expense',
+                    headerBackTitle: 'Back',
+                    headerBackTitleStyle: {
+                        fontSize: 16
+                    }
+                }}
+            />
         </Stack>
     );
 }

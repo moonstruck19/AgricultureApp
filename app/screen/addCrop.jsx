@@ -116,7 +116,7 @@ const AddCrop = () => {
   };
   
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <ScrollView contentContainerStyle={addCropStyles.container}>
       <Formik
         initialValues={{ crop_name: "", crop_details: "" }}
         onSubmit={(values) => handleAddCrop(values)}
@@ -150,7 +150,7 @@ const AddCrop = () => {
             <View style={addCropStyles.section}>
               <Text style={addCropStyles.label}>Date</Text>
               <View style={addCropStyles.inline}>
-                <TouchableOpacity onPress={() => setShowPicker(true)} style={addCropStyles.dateButton}>
+                <TouchableOpacity onPress={() => setShowPicker(true)} style={addCropStyles.input}>
                   <TextInput
                     value={today}
                     editable={false}
