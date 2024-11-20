@@ -9,12 +9,9 @@ import { myFarm } from '../style/myFarm'
 
 const localip = process.env.EXPO_PUBLIC_LOCAL_IP
 
-// const [refreshing, setRefreshing] = useState(false)
-
-
 const Animal = () => {
     const [dataAnimal, setDataAnimal] = useState([])
-    
+    const [refreshing, setRefreshing] = useState(false)
     const [showEditModal, setShowEditModal] = useState(false)
     const [selectedAnimal, setSelectedAnimal] = useState("")
     const [aniName, setAniName] = useState("")
@@ -39,12 +36,12 @@ const Animal = () => {
             console.error("Error fetching animals data: ", error)
             setDataAnimal([]) 
           })
-          // .finally(() => setRefreshing(false))
+          .finally(() => setRefreshing(false))
     }
-    // const onRefreshAnimal = () => {
-    //   setRefreshing(true)
-    //   fetchAnimal()
-    // }
+    const onRefreshAnimal = () => {
+      setRefreshing(true)
+      fetchAnimal()
+    }
       
     const handleDelete = (animalId) => {
       Alert.alert("Confirm Delete", "Are you sure you want to delete this animal?", [
@@ -126,8 +123,9 @@ const Animal = () => {
     }, [])
   
     return (
-      <ScrollView contentContainerStyle={myFarm.screen}
-        
+      <ScrollView 
+        contentContainerStyle={myFarm.screen}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshAnimal} />}
       >
         <TouchableOpacity style={myFarm.fab}>
           <Link href="../screen/addAnimal">
@@ -190,7 +188,7 @@ const Animal = () => {
 
 const Crop = () => {
     const [dataCrop, setDataCrop] = useState([])
-
+    const [refreshing, setRefreshing] = useState(false)
     const [showEditModal, setShowEditModal] = useState(false)
 
     const [selectedCrop, setSelectedCrop] = useState("")
@@ -208,7 +206,7 @@ const Crop = () => {
             .catch((error) => {
                 console.error("Error fetching crop data: ", error)
             })
-            // .finally(() => setRefreshing(false))
+            .finally(() => setRefreshing(false))
 
     }
     const handleDelete = (cropId) => {
@@ -240,10 +238,10 @@ const Crop = () => {
         },
       ])
     }
-    // const onRefreshCrop = () => {
-    //   setRefreshing(true)
-    //   fetchCrop()
-    // }
+    const onRefreshCrop = () => {
+      setRefreshing(true)
+      fetchCrop()
+    }
 
     const handleEditCrop = (data) => {
       setSelectedCrop(data);
@@ -290,7 +288,10 @@ const Crop = () => {
     }, [])
 
     return (
-        <ScrollView contentContainerStyle={myFarm.screen}>
+        <ScrollView 
+          contentContainerStyle={myFarm.screen}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshCrop} />}
+        >
             <TouchableOpacity style={myFarm.fab}>
                 <Link href="../screen/addCrop">
                     <Ionicons name="add" size={24} color="white" />
